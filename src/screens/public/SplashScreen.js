@@ -51,7 +51,7 @@ export function SplashScreen({ onFinish }) {
           <Text style={styles.logoText}>M</Text>
         </View>
 
-        <Text style={styles.brandTitle}>MORPHY ACADEMY</Text>
+        <Text style={styles.brandTitle}>MORPH ACADEMY</Text>
         <Text style={styles.brandSub}>CREATIVE TECH & 3D STUDIO INSTITUTE</Text>
 
         <View style={styles.loaderWrap}>

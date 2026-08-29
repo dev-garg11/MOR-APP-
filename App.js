@@ -162,7 +162,7 @@ export default function App() {
               <Text style={styles.adminLogoText}>M</Text>
             </View>
             <View>
-              <Text style={styles.adminBrandName}>MORPHY HR & ADMISSIONS</Text>
+              <Text style={styles.adminBrandName}>MORPH HR & ADMISSIONS</Text>
               <Text style={styles.adminBrandSub}>COUNSELOR & ADMISSIONS DESK</Text>
             </View>
           </View>
@@ -252,7 +252,6 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: theme.colors.background,
-    minHeight: '100vh',
     width: '100%',
   },
   centerBox: {

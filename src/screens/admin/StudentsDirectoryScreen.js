@@ -96,7 +96,7 @@ export function StudentsDirectoryScreen({ onNavigate }) {
       const payload = {
         name: newStuName.trim(),
         phone: newStuPhone.trim(),
-        email: newStuEmail.trim() || `${newStuName.trim().toLowerCase().replace(/[^a-z0-9]/g, '.')}@morphyacademy.com`,
+        email: newStuEmail.trim() || `${newStuName.trim().toLowerCase().replace(/[^a-z0-9]/g, '.')}@morphacademy.com`,
         course: newStuCourse,
         batch: newStuBatch,
         mode: newStuMode,

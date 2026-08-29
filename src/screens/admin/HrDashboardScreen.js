@@ -100,7 +100,7 @@ export function HrDashboardScreen() {
   const handleWhatsApp = (lead) => {
     const cleanPhone = lead.phone.replace(/[^0-9]/g, '');
     const phoneWithCode = cleanPhone.length === 10 ? `91${cleanPhone}` : cleanPhone;
-    const msg = `Hi ${lead.name}, this is the Admissions & Counseling team from Morphy Academy regarding your enquiry for ${lead.course_interest || 'Creative Tech Courses'}. Are you available for a quick discussion?`;
+    const msg = `Hi ${lead.name}, this is the Admissions & Counseling team from Morph Academy regarding your enquiry for ${lead.course_interest || 'Creative Tech Courses'}. Are you available for a quick discussion?`;
     Linking.openURL(`https://wa.me/${phoneWithCode}?text=${encodeURIComponent(msg)}`);
   };
 
@@ -657,7 +657,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   followupNotice: {
-    backgroundColor: 'rgba(167, 139, 250, 0.10)',
+    backgroundColor: 'rgba(55, 44, 88, 0.1)',
     borderRadius: theme.radius.xs,
     padding: 8,
     marginTop: 10,

@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { MORPHY_COURSES } from '../../data/coursesData';
+import { MORPH_COURSES } from '../../data/coursesData';
 import { createLead } from '../../services/endpoints';
 import { theme } from '../../theme';
 import { getStoredLeadSource, normalizeSource } from '../../utils/leadSourceDetector';
@@ -95,7 +95,7 @@ export function EnquiryModal({ visible, defaultCourse, onClose, onSuccess }) {
   };
 
   const handleOpenWhatsApp = () => {
-    const text = `Hi Morphy Academy, I have submitted an enquiry for *${course}*. My name is ${name}. Please share the syllabus and batch timings.`;
+    const text = `Hi Morph Academy, I have submitted an enquiry for *${course}*. My name is ${name}. Please share the syllabus and batch timings.`;
     Linking.openURL(`https://wa.me/919876543210?text=${encodeURIComponent(text)}`);
   };
 
@@ -122,7 +122,7 @@ export function EnquiryModal({ visible, defaultCourse, onClose, onSuccess }) {
 
               <Text style={styles.successTitle}>Enquiry Submitted Successfully!</Text>
               <Text style={styles.successSubtitle}>
-                Your enquiry has been submitted successfully to Morphy Academy Admissions.
+                Your enquiry has been submitted successfully to Morph Academy Admissions.
               </Text>
 
               {/* Summary Details */}
@@ -228,7 +228,7 @@ export function EnquiryModal({ visible, defaultCourse, onClose, onSuccess }) {
                   Course Interested In <Text style={styles.requiredStar}>*</Text>
                 </Text>
                 <View style={styles.chipGrid}>
-                  {MORPHY_COURSES.map((c) => (
+                  {MORPH_COURSES.map((c) => (
                     <TouchableOpacity
                       key={c.id}
                       style={[styles.chip, course === c.title && styles.chipActive]}

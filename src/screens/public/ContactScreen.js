@@ -16,12 +16,12 @@ export function ContactScreen({ onEnquire }) {
 
   const handleWhatsApp = () => {
     Linking.openURL(
-      'https://wa.me/919876543210?text=Hi%20Morphy%20Academy%2C%20I%20would%20like%20to%20visit%20the%20campus%20and%20enquire%20about%20creative%20tech%20courses.'
+      'https://wa.me/919876543210?text=Hi%20Morph%20Academy%2C%20I%20would%20like%20to%20visit%20the%20campus%20and%20enquire%20about%20creative%20tech%20courses.'
     );
   };
 
   const handleEmail = () => {
-    Linking.openURL('mailto:admissions@morphyacademy.com');
+    Linking.openURL('mailto:admissions@morphacademy.com');
   };
 
   return (
@@ -29,7 +29,7 @@ export function ContactScreen({ onEnquire }) {
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.badge}>GET IN TOUCH</Text>
-        <Text style={styles.title}>Contact Morphy Academy</Text>
+        <Text style={styles.title}>Contact Morph Academy</Text>
         <Text style={styles.subtitle}>
           Have questions about our syllabus, batches, or scholarships? Connect with our senior counselors today.
         </Text>
@@ -52,7 +52,7 @@ export function ContactScreen({ onEnquire }) {
         <TouchableOpacity style={styles.actionCard} onPress={handleEmail}>
           <Text style={styles.actionIcon}>✉️</Text>
           <Text style={styles.actionTitle}>Email Counselors</Text>
-          <Text style={styles.actionSub}>admissions@morphyacademy.com</Text>
+          <Text style={styles.actionSub}>admissions@morphacademy.com</Text>
         </TouchableOpacity>
 
         {/* Official Social Channels */}
@@ -83,7 +83,7 @@ export function ContactScreen({ onEnquire }) {
       <View style={styles.card}>
         <Text style={styles.cardTitle}>📍 Campus & Studio Facility</Text>
         <Text style={styles.campusAddress}>
-          Morphy Creative Tech Academy,{'\n'}
+          Morph Creative Tech Academy,{'\n'}
           Studio Tower, 4th Floor, Tech Innovation Park,{'\n'}
           Sector 62, Creative Arts District, 201309
         </Text>

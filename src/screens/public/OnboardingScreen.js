@@ -53,7 +53,7 @@ export function OnboardingScreen({ onFinish }) {
           <View style={styles.miniLogo}>
             <Text style={styles.miniLogoText}>M</Text>
           </View>
-          <Text style={styles.brandName}>MORPHY ACADEMY</Text>
+          <Text style={styles.brandName}>MORPH ACADEMY</Text>
         </View>
 
         <TouchableOpacity onPress={onFinish} style={styles.skipBtn}>

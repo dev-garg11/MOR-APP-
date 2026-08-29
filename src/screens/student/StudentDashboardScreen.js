@@ -281,7 +281,7 @@ export function StudentDashboardScreen({ onLogout }) {
                 style={styles.receiptBtn}
                 onPress={() =>
                   alert(
-                    `📄 Morphy Academy Official Receipt #${p.id}\nStudent: ${profile?.name} (${profile?.login_id})\nAmount Paid: ₹${Number(p.amount).toLocaleString()}\nMode: ${p.payment_mode}\nDate: ${p.payment_date}\nStatus: Verified & Cleared`
+                    `📄 Morph Academy Official Receipt #${p.id}\nStudent: ${profile?.name} (${profile?.login_id})\nAmount Paid: ₹${Number(p.amount).toLocaleString()}\nMode: ${p.payment_mode}\nDate: ${p.payment_date}\nStatus: Verified & Cleared`
                   )
                 }
               >

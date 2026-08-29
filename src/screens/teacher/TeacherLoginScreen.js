@@ -45,13 +45,13 @@ export function TeacherLoginScreen({ onLoginSuccess, onBackToHome }) {
   };
 
   const autofillTeacher1 = () => {
-    setIdentifier('teacher@morphyacademy.com');
+    setIdentifier('teacher@morphacademy.com');
     setPassword('Teacher@12345');
     setError('');
   };
 
   const autofillTeacher2 = () => {
-    setIdentifier('other_teacher@morphyacademy.com');
+    setIdentifier('other_teacher@morphacademy.com');
     setPassword('Teacher@12345');
     setError('');
   };
@@ -85,7 +85,7 @@ export function TeacherLoginScreen({ onLoginSuccess, onBackToHome }) {
             style={styles.input}
             value={identifier}
             onChangeText={setIdentifier}
-            placeholder="e.g. teacher@morphyacademy.com"
+            placeholder="e.g. teacher@morphacademy.com"
             placeholderTextColor={theme.colors.textMuted}
             autoCapitalize="none"
             keyboardType="email-address"

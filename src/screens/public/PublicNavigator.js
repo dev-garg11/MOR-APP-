@@ -7,7 +7,7 @@ import {
   View,
 } from 'react-native';
 import { EnquiryModal } from '../../components/public/EnquiryModal';
-import { MORPHY_COURSES } from '../../data/coursesData';
+import { MORPH_COURSES } from '../../data/coursesData';
 import { theme } from '../../theme';
 import { AboutFacilitiesScreen } from './AboutFacilitiesScreen';
 import { ContactScreen } from './ContactScreen';
@@ -74,7 +74,7 @@ export function PublicNavigator({ onOpenAdmin, onOpenStudentPortal, onOpenTeache
             <Text style={styles.logoBadgeText}>M</Text>
           </View>
           <View>
-            <Text style={styles.brandTitle}>MORPHY ACADEMY</Text>
+            <Text style={styles.brandTitle}>MORPH ACADEMY</Text>
             <Text style={styles.brandSub}>STUDIO & CREATIVE TECH INSTITUTE</Text>
           </View>
         </TouchableOpacity>
@@ -183,7 +183,6 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: theme.colors.background,
-    minHeight: '100vh',
     width: '100%',
   },
   navbar: {

@@ -59,7 +59,7 @@ export function LeadsCrmScreen() {
   const handleWhatsApp = (lead) => {
     const cleanPhone = lead.phone.replace(/[^0-9]/g, '');
     const phoneWithCode = cleanPhone.length === 10 ? `91${cleanPhone}` : cleanPhone;
-    const msg = `Hi ${lead.name}, this is counselor team from Morphy Academy regarding your enquiry for ${lead.course_interest || 'Creative Courses'}. Are you available for a quick discussion?`;
+    const msg = `Hi ${lead.name}, this is counselor team from Morph Academy regarding your enquiry for ${lead.course_interest || 'Creative Courses'}. Are you available for a quick discussion?`;
     Linking.openURL(`https://wa.me/${phoneWithCode}?text=${encodeURIComponent(msg)}`);
   };
 

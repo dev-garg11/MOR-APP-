@@ -22,7 +22,7 @@ export function AdmitStudentModal({ visible, lead, onClose, onSuccess }) {
   const [feesTotal, setFeesTotal] = useState('45000');
   const [feesPaid, setFeesPaid] = useState('15000');
   const [discountAmount, setDiscountAmount] = useState('0');
-  const [password, setPassword] = useState('Morphy@2026');
+  const [password, setPassword] = useState('Morph@2026');
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -92,7 +92,7 @@ export function AdmitStudentModal({ visible, lead, onClose, onSuccess }) {
 
   const handleSendCredentialsWhatsApp = () => {
     if (!createdResult) return;
-    const msg = `🎉 *Welcome to Morphy Academy!*\n\nHi ${lead.name},\nYour admission for *${course}* is confirmed!\n\n📱 *Student Portal Access*:\n• *Login ID:* ${createdResult.loginId}\n• *Password:* ${createdResult.password}\n• *Batch:* ${batch}\n\nYou can now log in to the Morphy Student App to view your attendance and fee receipts.`;
+    const msg = `🎉 *Welcome to Morph Academy!*\n\nHi ${lead.name},\nYour admission for *${course}* is confirmed!\n\n📱 *Student Portal Access*:\n• *Login ID:* ${createdResult.loginId}\n• *Password:* ${createdResult.password}\n• *Batch:* ${batch}\n\nYou can now log in to the Morph Student App to view your attendance and fee receipts.`;
     const cleanPhone = lead.phone.replace(/[^0-9]/g, '');
     const phoneWithCode = cleanPhone.length === 10 ? `91${cleanPhone}` : cleanPhone;
     Linking.openURL(`https://wa.me/${phoneWithCode}?text=${encodeURIComponent(msg)}`);

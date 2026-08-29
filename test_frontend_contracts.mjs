@@ -1,8 +1,8 @@
-import { MORPHY_COURSES, ACADEMY_FACULTY, ACADEMY_FACILITIES } from './src/data/coursesData.js';
+import { MORPH_COURSES, ACADEMY_FACULTY, ACADEMY_FACILITIES } from './src/data/coursesData.js';
 
 console.log('=== TEST 1: Course Data Integrity ===');
-console.log(`Total Courses: ${MORPHY_COURSES.length}`);
-MORPHY_COURSES.forEach((c, idx) => {
+console.log(`Total Courses: ${MORPH_COURSES.length}`);
+MORPH_COURSES.forEach((c, idx) => {
   if (!c.id || !c.title || !c.category || !c.price || !c.emi || !c.modules || c.modules.length === 0) {
     throw new Error(`Course #${idx} (${c.title}) missing required fields!`);
   }
@@ -17,14 +17,14 @@ ACADEMY_FACILITIES.forEach((fa) => console.log(`✓ Facility: ${fa.title}`));
 
 console.log('\n=== TEST 3: Search & Filter Logic Verification ===');
 const testQuery = 'Maya';
-const searchResults = MORPHY_COURSES.filter(c => 
+const searchResults = MORPH_COURSES.filter(c => 
   c.title.toLowerCase().includes(testQuery.toLowerCase()) ||
   c.tools.some(t => t.toLowerCase().includes(testQuery.toLowerCase()))
 );
 console.log(`Search for "${testQuery}" found ${searchResults.length} course(s):`, searchResults.map(r => r.title));
 if (searchResults.length === 0) throw new Error('Search logic failed for Maya!');
 
-const vfxCategory = MORPHY_COURSES.filter(c => c.category === 'VFX');
+const vfxCategory = MORPH_COURSES.filter(c => c.category === 'VFX');
 console.log(`Filter by "VFX" found ${vfxCategory.length} course(s):`, vfxCategory.map(r => r.title));
 if (vfxCategory.length === 0) throw new Error('Category filter failed for VFX!');
 

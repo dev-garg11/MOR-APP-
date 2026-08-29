@@ -99,7 +99,7 @@ export function FeeManagerScreen() {
   const handleWhatsAppReminder = (item) => {
     const cleanPhone = (item.phone || '').replace(/[^0-9]/g, '');
     const p = cleanPhone.length === 10 ? `91${cleanPhone}` : cleanPhone;
-    const msg = `Hi ${item.student_name}, this is a gentle reminder from Morphy Academy Accounts regarding your pending fee installment of ₹${Number(item.pending_amount || 0).toLocaleString()} (Due: ${item.fee_due_date || 'Soon'}). Please clear at your earliest.`;
+    const msg = `Hi ${item.student_name}, this is a gentle reminder from Morph Academy Accounts regarding your pending fee installment of ₹${Number(item.pending_amount || 0).toLocaleString()} (Due: ${item.fee_due_date || 'Soon'}). Please clear at your earliest.`;
     Linking.openURL(`https://wa.me/${p}?text=${encodeURIComponent(msg)}`);
   };
 

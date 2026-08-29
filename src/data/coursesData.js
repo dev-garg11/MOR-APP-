@@ -1,5 +1,5 @@
-// Centralized Morphy & Zuri Academy Courses Catalog
-export const MORPHY_COURSES = [
+// Centralized Morph & Zuri Academy Courses Catalog
+export const MORPH_COURSES = [
   {
     id: '3d-animation-masterclass',
     slug: '3d-animation-masterclass',

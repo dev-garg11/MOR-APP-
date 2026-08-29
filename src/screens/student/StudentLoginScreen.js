@@ -44,7 +44,7 @@ export function StudentLoginScreen({ onLoginSuccess, onBackToHome }) {
 
   const handleForgotStudentPass = () => {
     Linking.openURL(
-      'https://wa.me/919876543210?text=Hi%20Morphy%20Academy%2C%20I%20am%20an%20enrolled%20student%20and%20need%20my%20Student%20ID%20or%20Password%20reset.'
+      'https://wa.me/919876543210?text=Hi%20Morph%20Academy%2C%20I%20am%20an%20enrolled%20student%20and%20need%20my%20Student%20ID%20or%20Password%20reset.'
     );
   };
 
@@ -59,7 +59,7 @@ export function StudentLoginScreen({ onLoginSuccess, onBackToHome }) {
           <Text style={styles.logoText}>M</Text>
         </View>
 
-        <Text style={styles.badge}>MY MORPHY</Text>
+        <Text style={styles.badge}>MY MORPH</Text>
         <Text style={styles.title}>Student Self-Service Portal</Text>
         <Text style={styles.subtitle}>
           Sign in to check attendance, fee installments, and class notices.
@@ -111,7 +111,7 @@ export function StudentLoginScreen({ onLoginSuccess, onBackToHome }) {
             {loading ? (
               <ActivityIndicator color={theme.colors.textDark} />
             ) : (
-              <Text style={styles.loginBtnText}>Sign In to My Morphy ➔</Text>
+              <Text style={styles.loginBtnText}>Sign In to My Morph ➔</Text>
             )}
           </TouchableOpacity>
 

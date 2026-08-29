@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { MORPHY_COURSES } from '../../data/coursesData';
+import { MORPH_COURSES } from '../../data/coursesData';
 import { courseEndpoints } from '../../services/endpoints';
 
 const CATEGORIES = [
@@ -26,7 +26,7 @@ const CATEGORIES = [
 ];
 
 export function CoursesScreen({ onSelectCourse, onEnquireCourse }) {
-  const [courses, setCourses] = useState(MORPHY_COURSES);
+  const [courses, setCourses] = useState(MORPH_COURSES);
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All Programs');
@@ -40,7 +40,7 @@ export function CoursesScreen({ onSelectCourse, onEnquireCourse }) {
         }
       })
       .catch(() => {
-        // Retain initial MORPHY_COURSES smoothly
+        // Retain initial MORPH_COURSES smoothly
       });
   }, []);
 

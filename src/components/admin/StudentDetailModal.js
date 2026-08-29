@@ -25,7 +25,7 @@ export function StudentDetailModal({ visible, student, onClose, onNavigate }) {
   const handleWhatsApp = () => {
     const cleanPhone = student.phone.replace(/[^0-9]/g, '');
     const p = cleanPhone.length === 10 ? `91${cleanPhone}` : cleanPhone;
-    const msg = `Hi ${student.name}, this is from Morphy Academy administration regarding your course ${student.course}.`;
+    const msg = `Hi ${student.name}, this is from Morph Academy administration regarding your course ${student.course}.`;
     Linking.openURL(`https://wa.me/${p}?text=${encodeURIComponent(msg)}`);
   };
 

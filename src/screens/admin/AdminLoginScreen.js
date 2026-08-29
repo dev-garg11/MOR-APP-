@@ -83,7 +83,7 @@ export function AdminLoginScreen({ onLoginSuccess, onBackToHome }) {
             style={styles.input}
             value={email}
             onChangeText={setEmail}
-            placeholder="e.g. hr@morphyacademy.com or admin@morphyacademy.com"
+            placeholder="e.g. hr@morphacademy.com or admin@morphacademy.com"
             placeholderTextColor={theme.colors.textMuted}
             keyboardType="email-address"
             autoCapitalize="none"
@@ -132,24 +132,24 @@ export function AdminLoginScreen({ onLoginSuccess, onBackToHome }) {
           <TouchableOpacity
             style={styles.quickFillBtn}
             onPress={() => {
-              setEmail('hr@morphyacademy.com');
+              setEmail('hr@morphacademy.com');
               setPassword('Hr@12345');
             }}
           >
             <Text style={styles.quickFillText}>
-              🎯 Auto-fill HR Counselor (hr@morphyacademy.com / Hr@12345)
+              🎯 Auto-fill HR Counselor (hr@morphacademy.com / Hr@12345)
             </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={[styles.quickFillBtn, { borderColor: theme.colors.primaryBorder }]}
             onPress={() => {
-              setEmail('admin@morphyacademy.com');
+              setEmail('admin@morphacademy.com');
               setPassword('Admin@12345');
             }}
           >
             <Text style={[styles.quickFillText, { color: theme.colors.primary }]}>
-              🔑 Auto-fill Super Admin (admin@morphyacademy.com / Admin@12345)
+              🔑 Auto-fill Super Admin (admin@morphacademy.com / Admin@12345)
             </Text>
           </TouchableOpacity>
 
@@ -165,7 +165,7 @@ export function AdminLoginScreen({ onLoginSuccess, onBackToHome }) {
         </View>
 
         <Text style={styles.footerHint}>
-          Default Login: admin@morphyacademy.com | Password: Admin@12345
+          Default Login: admin@morphacademy.com | Password: Admin@12345
         </Text>
       </View>
 
@@ -183,7 +183,7 @@ export function AdminLoginScreen({ onLoginSuccess, onBackToHome }) {
               style={styles.modalInput}
               value={forgotEmail}
               onChangeText={setForgotEmail}
-              placeholder="e.g. counselor@morphyacademy.com"
+              placeholder="e.g. counselor@morphacademy.com"
               placeholderTextColor={theme.colors.textMuted}
               keyboardType="email-address"
               autoCapitalize="none"
@@ -199,7 +199,7 @@ export function AdminLoginScreen({ onLoginSuccess, onBackToHome }) {
               style={styles.modalWhatsAppBtn}
               onPress={() =>
                 Linking.openURL(
-                  'https://wa.me/919876543210?text=Hi%20Super%20Admin%2C%20I%20need%20to%20reset%20my%20Morphy%20Academy%20staff%20account%20password.'
+                  'https://wa.me/919876543210?text=Hi%20Super%20Admin%2C%20I%20need%20to%20reset%20my%20Morph%20Academy%20staff%20account%20password.'
                 )
               }
             >
@@ -232,7 +232,7 @@ export function AdminLoginScreen({ onLoginSuccess, onBackToHome }) {
               <Text style={styles.guideStepNum}>1</Text>
               <Text style={styles.guideStepText}>
                 <Text style={{ fontWeight: '800', color: theme.colors.primary }}>Super Admin Login:</Text>{' '}
-                Apne Super Admin account (`admin@morphyacademy.com`) se sign-in karein.
+                Apne Super Admin account (`admin@morphacademy.com`) se sign-in karein.
               </Text>
             </View>
 

@@ -55,7 +55,7 @@ export function TeacherPortal({ onLogout, onSwitchPublic }) {
             <Text style={styles.logoText}>M</Text>
           </View>
           <View>
-            <Text style={styles.brandTitle}>MORPHY ACADEMY</Text>
+            <Text style={styles.brandTitle}>MORPH ACADEMY</Text>
             <Text style={styles.brandSub}>FACULTY & TRAINER PORTAL</Text>
           </View>
         </View>
@@ -171,7 +171,6 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: theme.colors.background,
-    minHeight: '100vh',
     width: '100%',
   },
   navbar: {

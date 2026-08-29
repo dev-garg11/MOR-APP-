@@ -14,7 +14,7 @@ import {
 import {
   ACADEMY_FACILITIES,
   ACADEMY_FACULTY,
-  MORPHY_COURSES,
+  MORPH_COURSES,
 } from '../../data/coursesData';
 import { theme } from '../../theme';
 import { detectAndPersistLeadSource } from '../../utils/leadSourceDetector';
@@ -89,7 +89,7 @@ const FAQS = [
   },
   {
     q: 'Are high-end workstations provided during training?',
-    a: 'Yes, Morphy Academy provides dedicated workstations equipped with NVIDIA RTX GPUs, dual color-accurate monitors, and drawing tablets.',
+    a: 'Yes, Morph Academy provides dedicated workstations equipped with NVIDIA RTX GPUs, dual color-accurate monitors, and drawing tablets.',
   },
   {
     q: 'How does the 0% interest EMI payment plan work?',
@@ -106,12 +106,12 @@ export function HomeScreen({
   onSelectCourse,
   onEnquireCourse,
 }) {
-  const [selectedCurriculumCourse, setSelectedCurriculumCourse] = useState(MORPHY_COURSES[0]);
+  const [selectedCurriculumCourse, setSelectedCurriculumCourse] = useState(MORPH_COURSES[0]);
   const [openFaqIndex, setOpenFaqIndex] = useState(0);
 
   // Dynamic Hero Video & Title Switcher Index
   const [activeShowcaseIndex, setActiveShowcaseIndex] = useState(0);
-  const [calcCourse, setCalcCourse] = useState(MORPHY_COURSES[0]);
+  const [calcCourse, setCalcCourse] = useState(MORPH_COURSES[0]);
   const [calcTenure, setCalcTenure] = useState(12);
 
   // Animation values
@@ -159,7 +159,7 @@ export function HomeScreen({
 
   const handleWhatsApp = () => {
     Linking.openURL(
-      'https://wa.me/919876543210?text=Hi%20Morphy%20Academy%20Team%2C%20I%20am%20interested%20in%20your%20creative%20tech%20courses.'
+      'https://wa.me/919876543210?text=Hi%20Morph%20Academy%20Team%2C%20I%20am%20interested%20in%20your%20creative%20tech%20courses.'
     );
   };
 
@@ -353,12 +353,12 @@ export function HomeScreen({
             <Text style={styles.sectionTitle}>Featured Academy Programs</Text>
           </View>
           <TouchableOpacity style={styles.viewAllBtn} onPress={onExploreCourses}>
-            <Text style={styles.viewAllBtnText}>View All ({MORPHY_COURSES.length}) ➔</Text>
+            <Text style={styles.viewAllBtnText}>View All ({MORPH_COURSES.length}) ➔</Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.courseGrid}>
-          {MORPHY_COURSES.slice(0, 4).map((course) => (
+          {MORPH_COURSES.slice(0, 4).map((course) => (
             <View key={course.id} style={styles.courseCard}>
               <Image source={{ uri: course.image }} style={styles.courseCardImage} />
 
@@ -409,7 +409,7 @@ export function HomeScreen({
       <View style={styles.sectionWrap}>
         <View style={styles.sectionCard}>
           <Text style={styles.sectionBadge}>ADVANTAGE</Text>
-          <Text style={styles.sectionTitle}>Why Choose Morphy Academy?</Text>
+          <Text style={styles.sectionTitle}>Why Choose Morph Academy?</Text>
 
           <View style={styles.whyGrid}>
             {[
@@ -494,7 +494,7 @@ export function HomeScreen({
 
             <Text style={styles.calcLabel}>1. Select Program</Text>
             <View style={styles.calcCourseSelect}>
-              {MORPHY_COURSES.map((c) => (
+              {MORPH_COURSES.map((c) => (
                 <TouchableOpacity
                   key={c.id}
                   style={[
@@ -620,7 +620,7 @@ export function HomeScreen({
       {/* Footer */}
       <View style={styles.footer}>
         <Text style={styles.footerText}>
-          © 2026 Morphy Academy. All rights reserved. • ISO Certified Animation & VFX Training
+          © 2026 Morph Academy. All rights reserved. • ISO Certified Animation & VFX Training
         </Text>
       </View>
     </ScrollView>

@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Morphy Academy",
+    "name": "Morph Academy",
     "slug": "morphy-academy",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -10,8 +10,9 @@
       "supportsTablet": true
     },
     "android": {
-      "package": "com.morphyacademy.app",
+      "package": "com.morphacademy.app",
       "versionCode": 1,
+      "usesCleartextTraffic": true,
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/android-icon-foreground.png",
@@ -25,6 +26,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "0c8afa76-8ae9-437a-8c85-406d8027db22"
+      }
     }
   }
 }

@@ -313,7 +313,7 @@ export function TeachersDirectoryScreen() {
                 <View style={styles.successCard}>
                   <Text style={styles.successTitle}>🎉 Faculty Onboarded Successfully!</Text>
                   <Text style={styles.successSub}>
-                    Account created and allocated in Morphy database:
+                    Account created and allocated in Morph database:
                   </Text>
                   <View style={styles.credBox}>
                     <Text style={styles.credRow}>
@@ -373,7 +373,7 @@ export function TeachersDirectoryScreen() {
                     style={styles.modalInput}
                     value={teacherEmail}
                     onChangeText={setTeacherEmail}
-                    placeholder="e.g. ramesh.k@morphyacademy.com"
+                    placeholder="e.g. ramesh.k@morphacademy.com"
                     placeholderTextColor="#64748B"
                     keyboardType="email-address"
                     autoCapitalize="none"

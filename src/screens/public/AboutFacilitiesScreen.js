@@ -16,7 +16,7 @@ export function AboutFacilitiesScreen({ onEnquire }) {
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.badge}>INSTITUTE OVERVIEW</Text>
-        <Text style={styles.title}>About Morphy Academy</Text>
+        <Text style={styles.title}>About Morph Academy</Text>
         <Text style={styles.subtitle}>
           Pioneering next-generation animation, VFX, and game design education with 100% production-driven training.
         </Text>
@@ -24,7 +24,7 @@ export function AboutFacilitiesScreen({ onEnquire }) {
 
       {/* 1. Core Mission & Why Choose Us */}
       <View style={styles.card}>
-        <Text style={styles.cardTitle}>Why Study at Morphy?</Text>
+        <Text style={styles.cardTitle}>Why Study at Morph?</Text>
         <View style={styles.pointsList}>
           {[
             {

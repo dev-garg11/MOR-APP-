@@ -64,7 +64,7 @@ export function DashboardOverviewScreen({ onNavigate }) {
     return (
       <View style={styles.centerBox}>
         <ActivityIndicator size="large" color={theme.colors.primary} />
-        <Text style={styles.loadingText}>Loading Morphy Academy Analytics…</Text>
+        <Text style={styles.loadingText}>Loading Morph Academy Analytics…</Text>
       </View>
     );
   }
@@ -89,7 +89,7 @@ export function DashboardOverviewScreen({ onNavigate }) {
       <View style={styles.header}>
         <View>
           <Text style={styles.headerBadge}>EXECUTIVE DASHBOARD</Text>
-          <Text style={styles.headerTitle}>Morphy Academy Control Center</Text>
+          <Text style={styles.headerTitle}>Morph Academy Control Center</Text>
         </View>
         <TouchableOpacity style={styles.refreshBtn} onPress={loadData}>
           <Text style={styles.refreshBtnText}>🔄 Refresh</Text>
