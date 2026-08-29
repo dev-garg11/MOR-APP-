@@ -1,41 +1,25 @@
-# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
+﻿# Old and zip files
+*.zip
+backend_updated*
+mo_frontend*
 
-# dependencies
-node_modules/
+# Dependencies
+**/node_modules/
+**/dist/
+**/.expo/
+*.log
 
-# Expo
-.expo/
-dist/
-web-build/
-expo-env.d.ts
+# Python
+**/__pycache__/
+*.py[cod]
+**/venv/
+**/.venv/
+**/env/
 
-# Native
-.kotlin/
-*.orig.*
-*.jks
-*.p8
-*.p12
-*.key
-*.mobileprovision
+# Environment Variables
+**/.env
+**/.env.local
 
-# Metro
-.metro-health-check*
-
-# debug
-npm-debug.*
-yarn-debug.*
-yarn-error.*
-
-# macOS
+# OS Files
 .DS_Store
-*.pem
-
-# local env files
-.env*.local
-
-# typescript
-*.tsbuildinfo
-
-# generated native folders
-/ios
-/android
+Thumbs.db
