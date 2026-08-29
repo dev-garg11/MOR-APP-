@@ -21,7 +21,7 @@ import { Platform } from 'react-native';
  * Your phone and laptop must be on the same Wi-Fi network.
  */
 
-const DEFAULT_BACKEND_URL = 'http://192.168.29.203:8000';
+const DEFAULT_BACKEND_URL = 'https://mor-app-backend.onrender.com';
 
 function resolveFallback() {
   return DEFAULT_BACKEND_URL;
