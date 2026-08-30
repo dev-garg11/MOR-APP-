@@ -1,7 +1,14 @@
+import sys
+from pathlib import Path
 from sqlalchemy import Column, Date, ForeignKey, Integer, Numeric, String, Text, TIMESTAMP
 from sqlalchemy.sql import func
 
+_backend_root = str(Path(__file__).resolve().parent.parent)
+if _backend_root not in sys.path:
+    sys.path.insert(0, _backend_root)
+
 from database import Base
+
 
 
 class FeePayment(Base):

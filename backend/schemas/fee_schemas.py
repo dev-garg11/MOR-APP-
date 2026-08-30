@@ -90,3 +90,11 @@ class PaymentVerifyResponse(BaseModel):
     pending_amount: Decimal
     already_processed: bool = False
 
+
+# Backward compatibility aliases
+RazorpayVerifyResponse = PaymentVerifyResponse
+RazorpayOrderResponse = PaymentOrderResponse
+RazorpayOrderCreate = PaymentOrderCreateRequest
+RazorpayVerifyRequest = PaymentVerifyRequest
+
+

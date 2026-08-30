@@ -1,10 +1,17 @@
 import hashlib
 import hmac
 import os
+import sys
 import time
 from datetime import date
 from decimal import Decimal
+from pathlib import Path
 from typing import Optional
+
+# Ensure backend root directory is in sys.path for VS Code Pylance resolution
+_backend_root = str(Path(__file__).resolve().parent.parent)
+if _backend_root not in sys.path:
+    sys.path.insert(0, _backend_root)
 
 import razorpay
 from dotenv import load_dotenv
@@ -19,9 +26,14 @@ from schemas.fee_schemas import (
     PaymentOrderResponse,
     PaymentVerifyRequest,
     PaymentVerifyResponse,
+    RazorpayOrderCreate,
+    RazorpayOrderResponse,
+    RazorpayVerifyRequest,
+    RazorpayVerifyResponse,
 )
 from services.audit_service import log_activity
 from services.auth_dependency import get_optional_current_student
+
 
 load_dotenv()
 
