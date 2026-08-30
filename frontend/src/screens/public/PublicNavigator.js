@@ -9,8 +9,10 @@ import {
   View,
 } from 'react-native';
 import { EnquiryModal } from '../../components/public/EnquiryModal';
+import { AiCounselorChatModal } from '../../components/public/AiCounselorChatModal';
 import { MORPH_COURSES } from '../../data/coursesData';
 import { theme } from '../../theme';
+
 import { AboutFacilitiesScreen } from './AboutFacilitiesScreen';
 import { ContactScreen } from './ContactScreen';
 import { CourseDetailsScreen } from './CourseDetailsScreen';
@@ -33,7 +35,11 @@ export function PublicNavigator({ onOpenAdmin, onOpenStudentPortal, onOpenTeache
   const [enquiryModalVisible, setEnquiryModalVisible] = useState(false);
   const [enquiryCourseTitle, setEnquiryCourseTitle] = useState('3D Animation Masterclass');
 
+  // AI Counselor Chat Modal State
+  const [aiChatVisible, setAiChatVisible] = useState(false);
+
   // Trigger enquiry modal with specific course
+
   const handleOpenEnquiry = (courseTitle = '3D Animation Masterclass') => {
     setEnquiryCourseTitle(courseTitle);
     setEnquiryModalVisible(true);
@@ -220,6 +226,28 @@ export function PublicNavigator({ onOpenAdmin, onOpenStudentPortal, onOpenTeache
         </TouchableOpacity>
       </View>
 
+      {/* Floating AI Counselor Button */}
+      {!aiChatVisible && (
+        <TouchableOpacity
+          style={styles.floatingAiBtn}
+          onPress={() => setAiChatVisible(true)}
+          activeOpacity={0.8}
+        >
+          <Text style={styles.floatingAiIcon}>🤖</Text>
+          <Text style={styles.floatingAiText}>Ask AI</Text>
+        </TouchableOpacity>
+      )}
+
+      {/* AI Counselor Chat Modal */}
+      <AiCounselorChatModal
+        visible={aiChatVisible}
+        onClose={() => setAiChatVisible(false)}
+        onOpenEnquiry={(cTitle) => {
+          setAiChatVisible(false);
+          handleOpenEnquiry(cTitle);
+        }}
+      />
+
       {/* Enquiry Modal */}
       <EnquiryModal
         visible={enquiryModalVisible}
@@ -229,6 +257,7 @@ export function PublicNavigator({ onOpenAdmin, onOpenStudentPortal, onOpenTeache
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   safeArea: {
@@ -390,4 +419,34 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5A623',
     marginTop: 2,
   },
+  floatingAiBtn: {
+    position: 'absolute',
+    bottom: Platform.OS === 'ios' ? 86 : 78,
+    right: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    backgroundColor: '#0F172A',
+    borderWidth: 1.5,
+    borderColor: '#F5A623',
+    paddingVertical: 9,
+    paddingHorizontal: 15,
+    borderRadius: 24,
+    shadowColor: '#F5A623',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.45,
+    shadowRadius: 10,
+    elevation: 10,
+    zIndex: 999,
+  },
+  floatingAiIcon: {
+    fontSize: 18,
+  },
+  floatingAiText: {
+    color: '#FFFFFF',
+    fontSize: 12,
+    fontWeight: '800',
+    letterSpacing: 0.3,
+  },
 });
+
