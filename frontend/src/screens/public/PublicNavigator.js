@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  useWindowDimensions,
   View,
 } from 'react-native';
 import { EnquiryModal } from '../../components/public/EnquiryModal';
@@ -22,6 +23,9 @@ import { OnboardingScreen } from './OnboardingScreen';
 import { SplashScreen } from './SplashScreen';
 
 export function PublicNavigator({ onOpenAdmin, onOpenStudentPortal, onOpenTeacher }) {
+  const { width } = useWindowDimensions();
+  const isDesktop = width >= 768;
+
   // Flow states: 'splash' | 'onboarding' | 'main'
   const [flowState, setFlowState] = useState('splash');
 
@@ -39,7 +43,6 @@ export function PublicNavigator({ onOpenAdmin, onOpenStudentPortal, onOpenTeache
   const [aiChatVisible, setAiChatVisible] = useState(false);
 
   // Trigger enquiry modal with specific course
-
   const handleOpenEnquiry = (courseTitle = '3D Animation Masterclass') => {
     setEnquiryCourseTitle(courseTitle);
     setEnquiryModalVisible(true);
@@ -69,15 +72,15 @@ export function PublicNavigator({ onOpenAdmin, onOpenStudentPortal, onOpenTeache
   // 3. MAIN PUBLIC EXPERIENCE (HOME, COURSES, COURSE DETAILS, ABOUT, CONTACT)
   return (
     <View style={styles.safeArea}>
-      <StatusBar barStyle="light-content" backgroundColor="#0A0E17" translucent={false} />
+      <StatusBar barStyle="light-content" backgroundColor="#080B10" translucent={false} />
 
-      {/* Top Studio Navbar (Notch & Status-bar Safe) */}
+      {/* Top Studio Header */}
       <View style={styles.navbarContainer}>
-        {/* Row 1: Brand Logo & Title */}
-        <View style={styles.brandRow}>
+        <View style={[styles.navbarInner, isDesktop && styles.navbarInnerDesktop]}>
+          {/* Brand Logo & Title */}
           <TouchableOpacity
             style={styles.brandTouchable}
-            activeOpacity={0.8}
+            activeOpacity={0.85}
             onPress={() => {
               setSelectedCourse(null);
               setActiveTab('home');
@@ -88,49 +91,98 @@ export function PublicNavigator({ onOpenAdmin, onOpenStudentPortal, onOpenTeache
             </View>
             <View>
               <Text style={styles.brandTitle}>MORPH ACADEMY</Text>
-              <Text style={styles.brandSub}>STUDIO & CREATIVE TECH INSTITUTE</Text>
+              <Text style={styles.brandSub}>CREATIVE TECH & ANIMATION STUDIO</Text>
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity
-            style={styles.enquireNavBtn}
-            onPress={() => handleOpenEnquiry('General Counseling')}
-            activeOpacity={0.8}
-          >
-            <Text style={styles.enquireNavBtnText}>⚡ Enquire</Text>
-          </TouchableOpacity>
+          {/* Desktop Nav Links */}
+          {isDesktop && (
+            <View style={styles.desktopNavLinks}>
+              <TouchableOpacity
+                style={[styles.desktopNavLink, activeTab === 'home' && !selectedCourse && styles.desktopNavLinkActive]}
+                onPress={() => {
+                  setSelectedCourse(null);
+                  setActiveTab('home');
+                }}
+              >
+                <Text style={[styles.desktopNavLinkText, activeTab === 'home' && !selectedCourse && styles.desktopNavLinkTextActive]}>Home</Text>
+                {activeTab === 'home' && !selectedCourse && <View style={styles.desktopNavIndicator} />}
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.desktopNavLink, activeTab === 'courses' && !selectedCourse && styles.desktopNavLinkActive]}
+                onPress={() => {
+                  setSelectedCourse(null);
+                  setActiveTab('courses');
+                }}
+              >
+                <Text style={[styles.desktopNavLinkText, activeTab === 'courses' && !selectedCourse && styles.desktopNavLinkTextActive]}>Courses</Text>
+                {activeTab === 'courses' && !selectedCourse && <View style={styles.desktopNavIndicator} />}
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.desktopNavLink, activeTab === 'about' && styles.desktopNavLinkActive]}
+                onPress={() => {
+                  setSelectedCourse(null);
+                  setActiveTab('about');
+                }}
+              >
+                <Text style={[styles.desktopNavLinkText, activeTab === 'about' && styles.desktopNavLinkTextActive]}>About & Labs</Text>
+                {activeTab === 'about' && <View style={styles.desktopNavIndicator} />}
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.desktopNavLink, activeTab === 'contact' && styles.desktopNavLinkActive]}
+                onPress={() => {
+                  setSelectedCourse(null);
+                  setActiveTab('contact');
+                }}
+              >
+                <Text style={[styles.desktopNavLinkText, activeTab === 'contact' && styles.desktopNavLinkTextActive]}>Contact</Text>
+                {activeTab === 'contact' && <View style={styles.desktopNavIndicator} />}
+              </TouchableOpacity>
+            </View>
+          )}
+
+          {/* Action Row */}
+          <View style={styles.navActionsRow}>
+            <TouchableOpacity
+              style={styles.studentNavBtn}
+              onPress={onOpenStudentPortal}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.studentNavBtnText}>🎓 Portal</Text>
+            </TouchableOpacity>
+
+            {isDesktop && (
+              <>
+                <TouchableOpacity
+                  style={styles.teacherNavBtn}
+                  onPress={onOpenTeacher}
+                  activeOpacity={0.8}
+                >
+                  <Text style={styles.teacherNavBtnText}>🧑‍🏫 Faculty</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={styles.adminNavBtn}
+                  onPress={onOpenAdmin}
+                  activeOpacity={0.8}
+                >
+                  <Text style={styles.adminNavBtnText}>🏢 HR</Text>
+                </TouchableOpacity>
+              </>
+            )}
+
+            <TouchableOpacity
+              style={styles.enquireNavBtn}
+              onPress={() => handleOpenEnquiry('General Counseling')}
+              activeOpacity={0.85}
+            >
+              <Text style={styles.enquireNavBtnText}>⚡ Book Demo</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-
-        {/* Row 2: Portal Quick Access Chips */}
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.portalChipsRow}
-        >
-          <TouchableOpacity
-            style={styles.teacherNavBtn}
-            onPress={onOpenTeacher}
-            activeOpacity={0.7}
-          >
-            <Text style={styles.teacherNavBtnText}>🧑‍🏫 Faculty ↗</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.studentNavBtn}
-            onPress={onOpenStudentPortal}
-            activeOpacity={0.7}
-          >
-            <Text style={styles.studentNavBtnText}>🎓 Student Portal ↗</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.adminNavBtn}
-            onPress={onOpenAdmin}
-            activeOpacity={0.7}
-          >
-            <Text style={styles.adminNavBtnText}>🏢 HR & Admissions ↗</Text>
-          </TouchableOpacity>
-        </ScrollView>
       </View>
 
       {/* Screen Content */}
@@ -171,70 +223,78 @@ export function PublicNavigator({ onOpenAdmin, onOpenStudentPortal, onOpenTeache
         )}
       </View>
 
-      {/* Bottom Floating Studio Dock */}
-      <View style={styles.bottomTabBar}>
-        <TouchableOpacity
-          style={[styles.tabItem, activeTab === 'home' && !selectedCourse && styles.tabItemActive]}
-          onPress={() => {
-            setSelectedCourse(null);
-            setActiveTab('home');
-          }}
-          activeOpacity={0.7}
-        >
-          <Text style={[styles.tabIcon, activeTab === 'home' && !selectedCourse && styles.tabIconActive]}>🏠</Text>
-          <Text style={[styles.tabLabel, activeTab === 'home' && !selectedCourse && styles.tabLabelActive]}>Home</Text>
-          {activeTab === 'home' && !selectedCourse && <View style={styles.activeDot} />}
-        </TouchableOpacity>
+      {/* Bottom Floating Studio Dock (Mobile Only) */}
+      {!isDesktop && (
+        <View style={styles.bottomTabBar}>
+          <TouchableOpacity
+            style={[styles.tabItem, activeTab === 'home' && !selectedCourse && styles.tabItemActive]}
+            onPress={() => {
+              setSelectedCourse(null);
+              setActiveTab('home');
+            }}
+            activeOpacity={0.7}
+          >
+            <Text style={[styles.tabIcon, activeTab === 'home' && !selectedCourse && styles.tabIconActive]}>🏠</Text>
+            <Text style={[styles.tabLabel, activeTab === 'home' && !selectedCourse && styles.tabLabelActive]}>Home</Text>
+            {activeTab === 'home' && !selectedCourse && <View style={styles.activeDot} />}
+          </TouchableOpacity>
 
-        <TouchableOpacity
-          style={[styles.tabItem, activeTab === 'courses' && !selectedCourse && styles.tabItemActive]}
-          onPress={() => {
-            setSelectedCourse(null);
-            setActiveTab('courses');
-          }}
-          activeOpacity={0.7}
-        >
-          <Text style={[styles.tabIcon, activeTab === 'courses' && !selectedCourse && styles.tabIconActive]}>📚</Text>
-          <Text style={[styles.tabLabel, activeTab === 'courses' && !selectedCourse && styles.tabLabelActive]}>Courses</Text>
-          {activeTab === 'courses' && !selectedCourse && <View style={styles.activeDot} />}
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.tabItem, activeTab === 'courses' && !selectedCourse && styles.tabItemActive]}
+            onPress={() => {
+              setSelectedCourse(null);
+              setActiveTab('courses');
+            }}
+            activeOpacity={0.7}
+          >
+            <Text style={[styles.tabIcon, activeTab === 'courses' && !selectedCourse && styles.tabIconActive]}>📚</Text>
+            <Text style={[styles.tabLabel, activeTab === 'courses' && !selectedCourse && styles.tabLabelActive]}>Courses</Text>
+            {activeTab === 'courses' && !selectedCourse && <View style={styles.activeDot} />}
+          </TouchableOpacity>
 
-        <TouchableOpacity
-          style={[styles.tabItem, activeTab === 'about' && styles.tabItemActive]}
-          onPress={() => {
-            setSelectedCourse(null);
-            setActiveTab('about');
-          }}
-          activeOpacity={0.7}
-        >
-          <Text style={[styles.tabIcon, activeTab === 'about' && styles.tabIconActive]}>🏢</Text>
-          <Text style={[styles.tabLabel, activeTab === 'about' && styles.tabLabelActive]}>About & Labs</Text>
-          {activeTab === 'about' && <View style={styles.activeDot} />}
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.tabItem, activeTab === 'about' && styles.tabItemActive]}
+            onPress={() => {
+              setSelectedCourse(null);
+              setActiveTab('about');
+            }}
+            activeOpacity={0.7}
+          >
+            <Text style={[styles.tabIcon, activeTab === 'about' && styles.tabIconActive]}>🏛️</Text>
+            <Text style={[styles.tabLabel, activeTab === 'about' && styles.tabLabelActive]}>Labs</Text>
+            {activeTab === 'about' && <View style={styles.activeDot} />}
+          </TouchableOpacity>
 
-        <TouchableOpacity
-          style={[styles.tabItem, activeTab === 'contact' && styles.tabItemActive]}
-          onPress={() => {
-            setSelectedCourse(null);
-            setActiveTab('contact');
-          }}
-          activeOpacity={0.7}
-        >
-          <Text style={[styles.tabIcon, activeTab === 'contact' && styles.tabIconActive]}>📞</Text>
-          <Text style={[styles.tabLabel, activeTab === 'contact' && styles.tabLabelActive]}>Contact</Text>
-          {activeTab === 'contact' && <View style={styles.activeDot} />}
-        </TouchableOpacity>
-      </View>
+          <TouchableOpacity
+            style={styles.tabItem}
+            onPress={onOpenStudentPortal}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.tabIcon}>🎓</Text>
+            <Text style={[styles.tabLabel, { color: '#38BDF8', fontWeight: '800' }]}>Portal</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.tabItem}
+            onPress={() => setAiChatVisible(true)}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.tabIcon}>💬</Text>
+            <Text style={[styles.tabLabel, { color: '#F5A623', fontWeight: '800' }]}>Ask AI</Text>
+          </TouchableOpacity>
+        </View>
+      )}
 
       {/* Floating AI Counselor Button */}
       {!aiChatVisible && (
         <TouchableOpacity
           style={styles.floatingAiBtn}
           onPress={() => setAiChatVisible(true)}
-          activeOpacity={0.8}
+          activeOpacity={0.85}
         >
-          <Text style={styles.floatingAiIcon}>🤖</Text>
-          <Text style={styles.floatingAiText}>Ask AI</Text>
+          <View style={styles.floatingAiPulse} />
+          <Text style={styles.floatingAiIcon}>✨</Text>
+          <Text style={styles.floatingAiText}>AI Counselor</Text>
         </TouchableOpacity>
       )}
 
@@ -262,22 +322,30 @@ export function PublicNavigator({ onOpenAdmin, onOpenStudentPortal, onOpenTeache
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#0A0E17',
+    backgroundColor: '#080B10',
     width: '100%',
   },
   navbarContainer: {
-    backgroundColor: 'rgba(10, 14, 23, 0.96)',
+    backgroundColor: 'rgba(8, 11, 16, 0.94)',
     borderBottomWidth: 1,
-    borderBottomColor: '#1E293B',
-    paddingTop: Platform.OS === 'android' ? (StatusBar.currentHeight || 28) + 10 : 16,
+    borderBottomColor: 'rgba(255, 255, 255, 0.08)',
+    paddingTop: Platform.OS === 'android' ? (StatusBar.currentHeight || 28) + 8 : 14,
     paddingHorizontal: 16,
     paddingBottom: 10,
   },
-  brandRow: {
+  navbarInner: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 10,
+    flexWrap: 'wrap',
+    gap: 12,
+  },
+  navbarInnerDesktop: {
+    maxWidth: 1240,
+    marginHorizontal: 'auto',
+    width: '100%',
+    flexWrap: 'nowrap',
+    paddingHorizontal: 8,
   },
   brandTouchable: {
     flexDirection: 'row',
@@ -292,18 +360,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: '#F5A623',
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.35,
     shadowRadius: 8,
     elevation: 6,
   },
   logoBadgeText: {
-    color: '#0A0E17',
+    color: '#080B10',
     fontSize: 20,
     fontWeight: '900',
   },
   brandTitle: {
-    color: '#FFFFFF',
+    color: '#F8FAFC',
     fontSize: 15,
     fontWeight: '900',
     letterSpacing: 0.8,
@@ -314,34 +382,53 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     letterSpacing: 1,
   },
-  enquireNavBtn: {
+  desktopNavLinks: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 20,
+    marginHorizontal: 16,
+  },
+  desktopNavLink: {
+    paddingVertical: 6,
+    paddingHorizontal: 8,
+    position: 'relative',
+  },
+  desktopNavLinkActive: {},
+  desktopNavLinkText: {
+    color: '#94A3B8',
+    fontSize: 14,
+    fontWeight: '600',
+    letterSpacing: 0.2,
+  },
+  desktopNavLinkTextActive: {
+    color: '#F8FAFC',
+    fontWeight: '800',
+  },
+  desktopNavIndicator: {
+    position: 'absolute',
+    bottom: -6,
+    left: 8,
+    right: 8,
+    height: 2.5,
+    borderRadius: 2,
     backgroundColor: '#F5A623',
-    paddingHorizontal: 13,
-    paddingVertical: 7,
-    borderRadius: 8,
     shadowColor: '#F5A623',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
+    shadowOpacity: 0.8,
     shadowRadius: 4,
-    elevation: 3,
   },
-  enquireNavBtnText: {
-    color: '#0A0E17',
-    fontSize: 12,
-    fontWeight: '900',
-  },
-  portalChipsRow: {
+  navActionsRow: {
     flexDirection: 'row',
+    alignItems: 'center',
     gap: 8,
-    paddingVertical: 2,
   },
   teacherNavBtn: {
-    backgroundColor: 'rgba(245, 166, 35, 0.12)',
-    paddingHorizontal: 12,
+    backgroundColor: 'rgba(245, 166, 35, 0.10)',
+    paddingHorizontal: 10,
     paddingVertical: 6,
-    borderRadius: 16,
+    borderRadius: 14,
     borderWidth: 1,
-    borderColor: 'rgba(245, 166, 35, 0.35)',
+    borderColor: 'rgba(245, 166, 35, 0.30)',
   },
   teacherNavBtnText: {
     color: '#F5A623',
@@ -349,12 +436,12 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   studentNavBtn: {
-    backgroundColor: 'rgba(56, 189, 248, 0.12)',
-    paddingHorizontal: 12,
+    backgroundColor: 'rgba(56, 189, 248, 0.10)',
+    paddingHorizontal: 10,
     paddingVertical: 6,
-    borderRadius: 16,
+    borderRadius: 14,
     borderWidth: 1,
-    borderColor: 'rgba(56, 189, 248, 0.35)',
+    borderColor: 'rgba(56, 189, 248, 0.30)',
   },
   studentNavBtnText: {
     color: '#38BDF8',
@@ -362,26 +449,43 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   adminNavBtn: {
-    backgroundColor: 'rgba(148, 163, 184, 0.12)',
-    paddingHorizontal: 12,
+    backgroundColor: 'rgba(148, 163, 184, 0.10)',
+    paddingHorizontal: 10,
     paddingVertical: 6,
-    borderRadius: 16,
+    borderRadius: 14,
     borderWidth: 1,
-    borderColor: 'rgba(148, 163, 184, 0.35)',
+    borderColor: 'rgba(148, 163, 184, 0.25)',
   },
   adminNavBtnText: {
     color: '#CBD5E1',
     fontSize: 11,
     fontWeight: '700',
   },
+  enquireNavBtn: {
+    backgroundColor: '#F5A623',
+    paddingHorizontal: 14,
+    paddingVertical: 7,
+    borderRadius: 10,
+    shadowColor: '#F5A623',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 4,
+  },
+  enquireNavBtnText: {
+    color: '#080B10',
+    fontSize: 12,
+    fontWeight: '900',
+    letterSpacing: 0.3,
+  },
   contentArea: {
     flex: 1,
   },
   bottomTabBar: {
     flexDirection: 'row',
-    backgroundColor: '#0F172A',
+    backgroundColor: '#0D1117',
     borderTopWidth: 1,
-    borderTopColor: '#1E293B',
+    borderTopColor: 'rgba(255, 255, 255, 0.08)',
     paddingVertical: 8,
     paddingHorizontal: 8,
   },
@@ -426,24 +530,30 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-    backgroundColor: '#0F172A',
+    backgroundColor: '#0D1117',
     borderWidth: 1.5,
     borderColor: '#F5A623',
-    paddingVertical: 9,
-    paddingHorizontal: 15,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
     borderRadius: 24,
     shadowColor: '#F5A623',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.45,
-    shadowRadius: 10,
+    shadowRadius: 12,
     elevation: 10,
     zIndex: 999,
   },
+  floatingAiPulse: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#10B981',
+  },
   floatingAiIcon: {
-    fontSize: 18,
+    fontSize: 16,
   },
   floatingAiText: {
-    color: '#FFFFFF',
+    color: '#F8FAFC',
     fontSize: 12,
     fontWeight: '800',
     letterSpacing: 0.3,

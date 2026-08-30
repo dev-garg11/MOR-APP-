@@ -10,12 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {
-  createFeePayment,
-  listPendingFees,
-  generateEmiSchedule,
-  getStudentFeeSummary,
-} from '../../services/endpoints';
+import { createFeePayment, listPendingFees } from '../../services/endpoints';
 import { theme } from '../../theme';
 
 export function FeeManagerScreen() {
@@ -26,21 +21,12 @@ export function FeeManagerScreen() {
 
   // Interactive Card Detail / Payment Modal State
   const [selectedFeeRecord, setSelectedFeeRecord] = useState(null);
-  const [modalTab, setModalTab] = useState('payment'); // 'payment' | 'emi'
   const [payAmount, setPayAmount] = useState('');
   const [payMode, setPayMode] = useState('UPI');
   const [payNotes, setPayNotes] = useState('');
   const [payLoading, setPayLoading] = useState(false);
   const [payError, setPayError] = useState('');
   const [paySuccess, setPaySuccess] = useState('');
-
-  // EMI Scheduling State
-  const [emiMonths, setEmiMonths] = useState(3);
-  const [studentEmis, setStudentEmis] = useState([]);
-  const [emiLoading, setEmiLoading] = useState(false);
-  const [emiError, setEmiError] = useState('');
-  const [emiSuccess, setEmiSuccess] = useState('');
-
 
   const loadPending = async () => {
     setLoading(true);
@@ -73,62 +59,12 @@ export function FeeManagerScreen() {
 
   const handleOpenDetail = (item) => {
     setSelectedFeeRecord(item);
-    setModalTab('payment');
     setPayAmount(String(item.pending_amount || ''));
     setPayMode('UPI');
     setPayNotes('');
     setPayError('');
     setPaySuccess('');
-    setEmiError('');
-    setEmiSuccess('');
-    setStudentEmis(item.emis || []);
-
-    // Load fresh student summary including EMIs
-    getStudentFeeSummary(item.student_id)
-      .then((res) => {
-        const data = res.data || res;
-        if (data?.emis) {
-          setStudentEmis(data.emis);
-          if (data.emi_plan_months) {
-            setEmiMonths(data.emi_plan_months);
-          }
-        }
-      })
-      .catch(() => {});
   };
-
-  const handleGenerateEmiPlan = async () => {
-    if (!selectedFeeRecord) return;
-    const outstanding = Number(selectedFeeRecord.pending_amount || 0);
-    if (outstanding <= 0) {
-      setEmiError('Student has no outstanding balance to schedule an EMI plan.');
-      return;
-    }
-
-    setEmiLoading(true);
-    setEmiError('');
-    setEmiSuccess('');
-
-    try {
-      const res = await generateEmiSchedule(selectedFeeRecord.student_id, {
-        months: emiMonths,
-      });
-      const data = res.data || res;
-      setStudentEmis(data.installments || []);
-      setEmiSuccess(
-        data.already_scheduled
-          ? `✓ Active ${emiMonths}-month EMI plan verified!`
-          : `🎉 Generated ${emiMonths}-month automated EMI schedule! Each installment: ₹${Number(data.installment_amount).toLocaleString()}`
-      );
-      // Reload main pending list
-      loadPending();
-    } catch (err) {
-      setEmiError(err.message || 'Failed to generate EMI schedule.');
-    } finally {
-      setEmiLoading(false);
-    }
-  };
-
 
   const handleRecordPayment = async () => {
     if (!payAmount || parseFloat(payAmount) <= 0) {
@@ -177,14 +113,14 @@ export function FeeManagerScreen() {
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <View>
+        <View style={styles.headerTitleBox}>
           <Text style={styles.headerBadge}>ACCOUNTS & DUES</Text>
           <Text style={styles.headerTitle}>Fee Management & Recovery</Text>
           <Text style={styles.headerSubtitle}>
             Track upcoming installments, overdue balances, and record offline receipts.
           </Text>
         </View>
-        <TouchableOpacity style={styles.refreshBtn} onPress={loadPending}>
+        <TouchableOpacity style={styles.refreshBtn} onPress={loadPending} activeOpacity={0.8}>
           <Text style={styles.refreshBtnText}>🔄 Refresh</Text>
         </TouchableOpacity>
       </View>
@@ -434,231 +370,85 @@ export function FeeManagerScreen() {
                   </View>
                 </View>
 
-                {/* Modal Tab Switcher */}
-                <View style={styles.modalTabRow}>
-                  <TouchableOpacity
-                    style={[styles.modalTabBtn, modalTab === 'payment' && styles.modalTabBtnActive]}
-                    onPress={() => setModalTab('payment')}
-                    activeOpacity={0.7}
-                  >
-                    <Text
-                      style={[
-                        styles.modalTabBtnText,
-                        modalTab === 'payment' && styles.modalTabBtnTextActive,
-                      ]}
-                    >
-                      💳 Record Payment
-                    </Text>
-                  </TouchableOpacity>
+                {paySuccess ? (
+                  <View style={styles.successBanner}>
+                    <Text style={styles.successBannerText}>{paySuccess}</Text>
+                  </View>
+                ) : null}
 
-                  <TouchableOpacity
-                    style={[styles.modalTabBtn, modalTab === 'emi' && styles.modalTabBtnActive]}
-                    onPress={() => setModalTab('emi')}
-                    activeOpacity={0.7}
-                  >
-                    <Text
-                      style={[
-                        styles.modalTabBtnText,
-                        modalTab === 'emi' && styles.modalTabBtnTextActive,
-                      ]}
-                    >
-                      📅 EMI Schedule ({studentEmis.length})
-                    </Text>
-                  </TouchableOpacity>
-                </View>
+                {payError ? (
+                  <View style={styles.errorBanner}>
+                    <Text style={styles.errorBannerText}>{payError}</Text>
+                  </View>
+                ) : null}
 
-                {modalTab === 'payment' ? (
-                  <>
-                    {paySuccess ? (
-                      <View style={styles.successBanner}>
-                        <Text style={styles.successBannerText}>{paySuccess}</Text>
-                      </View>
-                    ) : null}
+                {/* Payment Form */}
+                <View style={styles.modalForm}>
+                  <Text style={styles.inputLabel}>Amount to Record (₹)*</Text>
+                  <TextInput
+                    style={styles.modalInput}
+                    placeholder="Enter amount"
+                    placeholderTextColor="#64748B"
+                    keyboardType="numeric"
+                    value={payAmount}
+                    onChangeText={setPayAmount}
+                  />
 
-                    {payError ? (
-                      <View style={styles.errorBanner}>
-                        <Text style={styles.errorBannerText}>{payError}</Text>
-                      </View>
-                    ) : null}
-
-                    {/* Payment Form */}
-                    <View style={styles.modalForm}>
-                      <Text style={styles.inputLabel}>Amount to Record (₹)*</Text>
-                      <TextInput
-                        style={styles.modalInput}
-                        placeholder="Enter amount"
-                        placeholderTextColor="#64748B"
-                        keyboardType="numeric"
-                        value={payAmount}
-                        onChangeText={setPayAmount}
-                      />
-
-                      <Text style={styles.inputLabel}>Payment Mode</Text>
-                      <View style={styles.modeRow}>
-                        {['UPI', 'Cash', 'Bank Transfer', 'Cheque', 'Card'].map((m) => (
-                          <TouchableOpacity
-                            key={m}
-                            style={[styles.modeBtn, payMode === m && styles.modeBtnActive]}
-                            onPress={() => setPayMode(m)}
-                          >
-                            <Text
-                              style={[
-                                styles.modeBtnText,
-                                payMode === m && styles.modeBtnTextActive,
-                              ]}
-                            >
-                              {m}
-                            </Text>
-                          </TouchableOpacity>
-                        ))}
-                      </View>
-
-                      <Text style={styles.inputLabel}>Receipt Notes / Transaction ID</Text>
-                      <TextInput
-                        style={styles.modalInput}
-                        placeholder="e.g. GPay UPI Ref 9384729103"
-                        placeholderTextColor="#64748B"
-                        value={payNotes}
-                        onChangeText={setPayNotes}
-                      />
-
-                      <View style={styles.modalBtnRow}>
-                        <TouchableOpacity
-                          style={styles.cancelBtn}
-                          onPress={() => setSelectedFeeRecord(null)}
+                  <Text style={styles.inputLabel}>Payment Mode</Text>
+                  <View style={styles.modeRow}>
+                    {['UPI', 'Cash', 'Bank Transfer', 'Cheque', 'Card'].map((m) => (
+                      <TouchableOpacity
+                        key={m}
+                        style={[styles.modeBtn, payMode === m && styles.modeBtnActive]}
+                        onPress={() => setPayMode(m)}
+                      >
+                        <Text
+                          style={[
+                            styles.modeBtnText,
+                            payMode === m && styles.modeBtnTextActive,
+                          ]}
                         >
-                          <Text style={styles.cancelBtnText}>Cancel</Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity
-                          style={styles.submitBtn}
-                          onPress={handleRecordPayment}
-                          disabled={payLoading}
-                        >
-                          {payLoading ? (
-                            <ActivityIndicator color="#000000" />
-                          ) : (
-                            <Text style={styles.submitBtnText}>✓ Save Payment Receipt</Text>
-                          )}
-                        </TouchableOpacity>
-                      </View>
-                    </View>
-                  </>
-                ) : (
-                  /* EMI Plan & Schedule Tab */
-                  <View style={styles.modalForm}>
-                    <Text style={styles.inputLabel}>Select EMI Plan Duration</Text>
-                    <View style={styles.modeRow}>
-                      {[3, 6, 12].map((m) => (
-                        <TouchableOpacity
-                          key={m}
-                          style={[styles.modeBtn, emiMonths === m && styles.modeBtnActive]}
-                          onPress={() => setEmiMonths(m)}
-                          activeOpacity={0.7}
-                        >
-                          <Text
-                            style={[
-                              styles.modeBtnText,
-                              emiMonths === m && styles.modeBtnTextActive,
-                            ]}
-                          >
-                            {m} Months (₹{Math.round(Number(selectedFeeRecord.pending_amount || 0) / m).toLocaleString()}/mo)
-                          </Text>
-                        </TouchableOpacity>
-                      ))}
-                    </View>
-
-                    {emiSuccess ? (
-                      <View style={styles.successBanner}>
-                        <Text style={styles.successBannerText}>{emiSuccess}</Text>
-                      </View>
-                    ) : null}
-
-                    {emiError ? (
-                      <View style={styles.errorBanner}>
-                        <Text style={styles.errorBannerText}>{emiError}</Text>
-                      </View>
-                    ) : null}
-
-                    <TouchableOpacity
-                      style={[styles.submitBtn, { marginTop: 10 }]}
-                      onPress={handleGenerateEmiPlan}
-                      disabled={emiLoading}
-                      activeOpacity={0.8}
-                    >
-                      {emiLoading ? (
-                        <ActivityIndicator color="#000000" />
-                      ) : (
-                        <Text style={styles.submitBtnText}>
-                          ⚡ {studentEmis.length > 0 ? 'Recalculate EMI Plan' : 'Generate Automated EMI Schedule'}
+                          {m}
                         </Text>
-                      )}
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+
+                  <Text style={styles.inputLabel}>Receipt Notes / Transaction ID</Text>
+                  <TextInput
+                    style={styles.modalInput}
+                    placeholder="e.g. GPay UPI Ref 9384729103"
+                    placeholderTextColor="#64748B"
+                    value={payNotes}
+                    onChangeText={setPayNotes}
+                  />
+
+                  <View style={styles.modalBtnRow}>
+                    <TouchableOpacity
+                      style={styles.cancelBtn}
+                      onPress={() => setSelectedFeeRecord(null)}
+                    >
+                      <Text style={styles.cancelBtnText}>Cancel</Text>
                     </TouchableOpacity>
 
-                    {/* Installments Table */}
-                    <Text style={[styles.inputLabel, { marginTop: 16 }]}>
-                      Installment Breakdown ({studentEmis.length} Installments)
-                    </Text>
-
-                    {studentEmis.length > 0 ? (
-                      <View style={styles.emiTable}>
-                        {studentEmis.map((inst) => {
-                          const isPaid = inst.status === 'paid';
-                          const isOver = inst.status === 'overdue';
-                          return (
-                            <View key={inst.id || inst.emi_number} style={styles.emiTableRow}>
-                              <View style={styles.emiTableLeft}>
-                                <Text style={styles.emiNumText}>EMI #{inst.emi_number}</Text>
-                                <Text style={styles.emiDueDate}>📅 Due: {inst.due_date}</Text>
-                                {inst.notes ? <Text style={styles.emiNotes}>{inst.notes}</Text> : null}
-                              </View>
-
-                              <View style={styles.emiTableRight}>
-                                <Text style={styles.emiAmountText}>
-                                  ₹{Number(inst.amount).toLocaleString()}
-                                </Text>
-                                <View
-                                  style={[
-                                    styles.statusBadge,
-                                    {
-                                      backgroundColor: isPaid
-                                        ? 'rgba(34, 197, 94, 0.15)'
-                                        : isOver
-                                        ? 'rgba(239, 68, 68, 0.15)'
-                                        : 'rgba(245, 166, 35, 0.15)',
-                                      borderColor: isPaid ? '#22C55E' : isOver ? '#EF4444' : '#F5A623',
-                                    },
-                                  ]}
-                                >
-                                  <Text
-                                    style={[
-                                      styles.statusBadgeText,
-                                      { color: isPaid ? '#22C55E' : isOver ? '#EF4444' : '#F5A623' },
-                                    ]}
-                                  >
-                                    {isPaid ? '✓ PAID' : isOver ? '⚠️ OVERDUE' : '⏳ PENDING'}
-                                  </Text>
-                                </View>
-                              </View>
-                            </View>
-                          );
-                        })}
-                      </View>
-                    ) : (
-                      <View style={styles.emptyEmiBox}>
-                        <Text style={styles.emptyEmiText}>
-                          No EMI schedule generated yet for this student. Click "Generate Automated EMI Schedule" above to divide the ₹{Number(selectedFeeRecord.pending_amount || 0).toLocaleString()} balance.
-                        </Text>
-                      </View>
-                    )}
+                    <TouchableOpacity
+                      style={styles.submitBtn}
+                      onPress={handleRecordPayment}
+                      disabled={payLoading}
+                    >
+                      {payLoading ? (
+                        <ActivityIndicator color="#000000" />
+                      ) : (
+                        <Text style={styles.submitBtnText}>✓ Save Payment Receipt</Text>
+                      )}
+                    </TouchableOpacity>
                   </View>
-                )}
+                </View>
               </ScrollView>
             </View>
           </View>
         </Modal>
       ) : null}
-
     </View>
   );
 }
@@ -671,30 +461,37 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 22,
+    alignItems: 'flex-start',
+    paddingHorizontal: 20,
     paddingVertical: 16,
     backgroundColor: '#121622',
     borderBottomWidth: 1,
     borderBottomColor: '#1e2638',
     flexWrap: 'wrap',
-    gap: 10,
+    gap: 12,
+  },
+  headerTitleBox: {
+    flex: 1,
+    minWidth: 260,
   },
   headerBadge: {
     color: '#F59E0B',
     fontSize: 10,
     fontWeight: '800',
     letterSpacing: 1.2,
-    marginBottom: 2,
+    marginBottom: 4,
   },
   headerTitle: {
     color: '#FFFFFF',
     fontSize: 22,
     fontWeight: '900',
+    lineHeight: 28,
   },
   headerSubtitle: {
     color: '#94A3B8',
     fontSize: 12,
+    lineHeight: 18,
+    marginTop: 2,
   },
   refreshBtn: {
     backgroundColor: '#1a2030',
@@ -1151,93 +948,4 @@ const styles = StyleSheet.create({
     color: '#94A3B8',
     fontSize: 12,
   },
-  modalTabRow: {
-    flexDirection: 'row',
-    backgroundColor: '#0F172A',
-    borderRadius: 10,
-    padding: 4,
-    marginBottom: 14,
-    gap: 6,
-    borderWidth: 1,
-    borderColor: '#1E293B',
-  },
-  modalTabBtn: {
-    flex: 1,
-    paddingVertical: 8,
-    alignItems: 'center',
-    borderRadius: 8,
-  },
-  modalTabBtnActive: {
-    backgroundColor: '#F5A623',
-  },
-  modalTabBtnText: {
-    color: '#94A3B8',
-    fontSize: 12,
-    fontWeight: '700',
-  },
-  modalTabBtnTextActive: {
-    color: '#0A0E17',
-    fontWeight: '800',
-  },
-  emiTable: {
-    backgroundColor: '#1E293B',
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#334155',
-    overflow: 'hidden',
-    marginTop: 8,
-  },
-  emiTableRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#0F172A',
-  },
-  emiTableLeft: {
-    flex: 1,
-  },
-  emiNumText: {
-    color: '#FFFFFF',
-    fontSize: 13,
-    fontWeight: '800',
-  },
-  emiDueDate: {
-    color: '#F5A623',
-    fontSize: 11,
-    marginTop: 2,
-    fontWeight: '600',
-  },
-  emiNotes: {
-    color: '#94A3B8',
-    fontSize: 10,
-    marginTop: 2,
-    fontStyle: 'italic',
-  },
-  emiTableRight: {
-    alignItems: 'flex-end',
-    gap: 4,
-  },
-  emiAmountText: {
-    color: '#FFFFFF',
-    fontSize: 14,
-    fontWeight: '900',
-  },
-  emptyEmiBox: {
-    padding: 16,
-    backgroundColor: '#1E293B',
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: '#334155',
-    marginTop: 8,
-  },
-  emptyEmiText: {
-    color: '#94A3B8',
-    fontSize: 12,
-    lineHeight: 18,
-    textAlign: 'center',
-  },
 });
-

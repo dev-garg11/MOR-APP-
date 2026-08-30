@@ -125,14 +125,14 @@ export function HrDashboardScreen() {
     <View style={styles.container}>
       {/* Top Header */}
       <View style={styles.header}>
-        <View>
+        <View style={styles.headerTitleBox}>
           <Text style={styles.headerBadge}>HR & COUNSELOR WORKSPACE</Text>
           <Text style={styles.headerTitle}>Enquiry & Admissions CRM</Text>
           <Text style={styles.headerSubtitle}>
             Manage incoming student enquiries, schedule follow-ups, and track admissions pipeline.
           </Text>
         </View>
-        <TouchableOpacity style={styles.refreshBtn} onPress={fetchHrData}>
+        <TouchableOpacity style={styles.refreshBtn} onPress={fetchHrData} activeOpacity={0.8}>
           <Text style={styles.refreshBtnText}>🔄 Refresh Data</Text>
         </TouchableOpacity>
       </View>
@@ -397,30 +397,37 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     paddingHorizontal: 20,
     paddingVertical: 16,
     backgroundColor: theme.colors.surfaceCard,
     borderBottomWidth: 1,
     borderBottomColor: theme.colors.border,
     flexWrap: 'wrap',
-    gap: 10,
+    gap: 12,
+  },
+  headerTitleBox: {
+    flex: 1,
+    minWidth: 260,
   },
   headerBadge: {
     color: theme.colors.primary,
     fontSize: 10,
     fontWeight: '800',
     letterSpacing: 1.2,
-    marginBottom: 2,
+    marginBottom: 4,
   },
   headerTitle: {
     color: theme.colors.textPrimary,
     fontSize: 22,
     fontWeight: '900',
+    lineHeight: 28,
   },
   headerSubtitle: {
     color: theme.colors.textSecondary,
     fontSize: 12,
+    lineHeight: 18,
+    marginTop: 2,
     maxWidth: 560,
   },
   refreshBtn: {
