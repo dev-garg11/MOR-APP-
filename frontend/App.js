@@ -97,7 +97,7 @@ export default function App() {
   // --- 1. STUDENT PORTAL ---
   if (currentPortal === 'student') {
     return (
-      <SafeAreaView style={styles.safeArea}>
+      <View style={styles.safeArea}>
         <StatusBar style="light" />
         {isStudentLoggedIn ? (
           <StudentDashboardScreen
@@ -112,7 +112,7 @@ export default function App() {
             onBackToHome={() => setCurrentPortal('public')}
           />
         )}
-      </SafeAreaView>
+      </View>
     );
   }
 
@@ -120,13 +120,13 @@ export default function App() {
   if (currentPortal === 'teacher') {
     if (!isAdminLoggedIn || (userRole !== 'teacher' && userRole !== 'trainer')) {
       return (
-        <SafeAreaView style={styles.safeArea}>
+        <View style={styles.safeArea}>
           <StatusBar style="light" />
           <TeacherLoginScreen
             onLoginSuccess={handleStaffLoginSuccess}
             onBackToHome={() => setCurrentPortal('public')}
           />
-        </SafeAreaView>
+        </View>
       );
     }
 
@@ -142,18 +142,18 @@ export default function App() {
   if (currentPortal === 'admin') {
     if (!isAdminLoggedIn) {
       return (
-        <SafeAreaView style={styles.safeArea}>
+        <View style={styles.safeArea}>
           <StatusBar style="light" />
           <AdminLoginScreen
             onLoginSuccess={handleStaffLoginSuccess}
             onBackToHome={() => setCurrentPortal('public')}
           />
-        </SafeAreaView>
+        </View>
       );
     }
 
     return (
-      <SafeAreaView style={styles.safeArea}>
+      <View style={styles.safeArea}>
         <StatusBar style="light" />
         {/* Admin Navigation Bar */}
         <View style={styles.adminNavBar}>
@@ -162,59 +162,127 @@ export default function App() {
               <Text style={styles.adminLogoText}>M</Text>
             </View>
             <View>
-              <Text style={styles.adminBrandName}>MORPH HR & ADMISSIONS</Text>
-              <Text style={styles.adminBrandSub}>COUNSELOR & ADMISSIONS DESK</Text>
+              <Text style={styles.adminBrandName}>MORPH ACADEMY</Text>
+              <Text style={styles.adminBrandSub}>
+                {userRole === 'admin' ? 'SUPER ADMIN' : 'STAFF / COUNSELOR'}
+              </Text>
             </View>
           </View>
 
-          {/* Navigation Tabs */}
-          <View style={styles.adminTabs}>
-            {[
-              { id: 'dashboard', label: '📊 Overview' },
-              { id: 'leads', label: '🎯 HR & Enquiries' },
-              { id: 'students', label: '🎓 Students' },
-              { id: 'teachers', label: '🧑‍🏫 Faculty' },
-              { id: 'fees', label: '💳 Fee Manager' },
-              { id: 'courses', label: '📚 Courses' },
-              { id: 'attendance', label: '📅 Attendance' },
-            ].map((tab) => (
-              <TouchableOpacity
-                key={tab.id}
-                style={[styles.adminTabBtn, adminTab === tab.id && styles.adminTabBtnActive]}
-                onPress={() => setAdminTab(tab.id)}
-              >
-                <Text
-                  style={[
-                    styles.adminTabBtnText,
-                    adminTab === tab.id && styles.adminTabBtnTextActive,
-                  ]}
-                >
-                  {tab.label}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-
-          {/* Right Actions */}
-          <View style={styles.adminNavRight}>
+          {/* Top-right action buttons */}
+          <View style={styles.adminActions}>
             <TouchableOpacity
-              style={styles.switchTeacherBtn}
-              onPress={() => setCurrentPortal('teacher')}
-            >
-              <Text style={styles.switchTeacherText}>🎓 Faculty ↗</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.switchPublicBtn}
+              style={styles.adminSwitchPublicBtn}
               onPress={() => setCurrentPortal('public')}
             >
-              <Text style={styles.switchPublicText}>🌐 Website</Text>
+              <Text style={styles.adminSwitchPublicText}>🌐 Website</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.logoutBtn} onPress={handleAdminLogout}>
-              <Text style={styles.logoutBtnText}>Logout</Text>
+            <TouchableOpacity style={styles.adminLogoutBtn} onPress={handleAdminLogout}>
+              <Text style={styles.adminLogoutText}>Logout</Text>
             </TouchableOpacity>
           </View>
+        </View>
+
+        {/* Admin Tab Navigation Bar */}
+        <View style={styles.adminTabBar}>
+          <TouchableOpacity
+            style={[styles.adminTab, adminTab === 'dashboard' && styles.adminTabActive]}
+            onPress={() => setAdminTab('dashboard')}
+          >
+            <Text
+              style={[
+                styles.adminTabText,
+                adminTab === 'dashboard' && styles.adminTabTextActive,
+              ]}
+            >
+              📊 Overview
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.adminTab, adminTab === 'leads' && styles.adminTabActive]}
+            onPress={() => setAdminTab('leads')}
+          >
+            <Text
+              style={[
+                styles.adminTabText,
+                adminTab === 'leads' && styles.adminTabTextActive,
+              ]}
+            >
+              📋 HR & Enquiries
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.adminTab, adminTab === 'students' && styles.adminTabActive]}
+            onPress={() => setAdminTab('students')}
+          >
+            <Text
+              style={[
+                styles.adminTabText,
+                adminTab === 'students' && styles.adminTabTextActive,
+              ]}
+            >
+              🎓 Students
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.adminTab, adminTab === 'teachers' && styles.adminTabActive]}
+            onPress={() => setAdminTab('teachers')}
+          >
+            <Text
+              style={[
+                styles.adminTabText,
+                adminTab === 'teachers' && styles.adminTabTextActive,
+              ]}
+            >
+              🧑‍🏫 Faculty
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.adminTab, adminTab === 'courses' && styles.adminTabActive]}
+            onPress={() => setAdminTab('courses')}
+          >
+            <Text
+              style={[
+                styles.adminTabText,
+                adminTab === 'courses' && styles.adminTabTextActive,
+              ]}
+            >
+              📚 Courses
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.adminTab, adminTab === 'fees' && styles.adminTabActive]}
+            onPress={() => setAdminTab('fees')}
+          >
+            <Text
+              style={[
+                styles.adminTabText,
+                adminTab === 'fees' && styles.adminTabTextActive,
+              ]}
+            >
+              💰 Fees
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.adminTab, adminTab === 'attendance' && styles.adminTabActive]}
+            onPress={() => setAdminTab('attendance')}
+          >
+            <Text
+              style={[
+                styles.adminTabText,
+                adminTab === 'attendance' && styles.adminTabTextActive,
+              ]}
+            >
+              📅 Attendance
+            </Text>
+          </TouchableOpacity>
         </View>
 
         {/* Admin Active Tab Content */}
@@ -231,7 +299,7 @@ export default function App() {
           {adminTab === 'fees' && <FeeManagerScreen />}
           {adminTab === 'attendance' && <TrainerAttendanceScreen />}
         </View>
-      </SafeAreaView>
+      </View>
     );
   }
 
@@ -253,6 +321,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: theme.colors.background,
     width: '100%',
+    minHeight: Platform.OS === 'web' ? '100vh' : '100%',
   },
   centerBox: {
     flex: 1,

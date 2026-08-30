@@ -200,29 +200,39 @@ export function PublicNavigator({ onOpenAdmin, onOpenStudentPortal, onOpenTeache
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={[styles.tabItem, activeTab === 'about' && styles.tabItemActive]}
-          onPress={() => {
-            setSelectedCourse(null);
-            setActiveTab('about');
-          }}
+          style={styles.tabItem}
+          onPress={onOpenStudentPortal}
           activeOpacity={0.7}
         >
-          <Text style={[styles.tabIcon, activeTab === 'about' && styles.tabIconActive]}>🏢</Text>
-          <Text style={[styles.tabLabel, activeTab === 'about' && styles.tabLabelActive]}>About & Labs</Text>
-          {activeTab === 'about' && <View style={styles.activeDot} />}
+          <Text style={styles.tabIcon}>🎓</Text>
+          <Text style={[styles.tabLabel, { color: '#38BDF8', fontWeight: '800' }]}>Student</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={[styles.tabItem, activeTab === 'contact' && styles.tabItemActive]}
-          onPress={() => {
-            setSelectedCourse(null);
-            setActiveTab('contact');
-          }}
+          style={styles.tabItem}
+          onPress={onOpenTeacher}
           activeOpacity={0.7}
         >
-          <Text style={[styles.tabIcon, activeTab === 'contact' && styles.tabIconActive]}>📞</Text>
-          <Text style={[styles.tabLabel, activeTab === 'contact' && styles.tabLabelActive]}>Contact</Text>
-          {activeTab === 'contact' && <View style={styles.activeDot} />}
+          <Text style={styles.tabIcon}>🧑‍🏫</Text>
+          <Text style={[styles.tabLabel, { color: '#A78BFA', fontWeight: '800' }]}>Faculty</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.tabItem}
+          onPress={onOpenAdmin}
+          activeOpacity={0.7}
+        >
+          <Text style={styles.tabIcon}>🏢</Text>
+          <Text style={[styles.tabLabel, { color: '#F5A623', fontWeight: '800' }]}>HR / Staff</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.tabItem}
+          onPress={() => setAiChatVisible(true)}
+          activeOpacity={0.7}
+        >
+          <Text style={styles.tabIcon}>💬</Text>
+          <Text style={[styles.tabLabel, { color: '#10B981', fontWeight: '800' }]}>Ask AI</Text>
         </TouchableOpacity>
       </View>
 
