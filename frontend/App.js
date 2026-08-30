@@ -2,9 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
-  Platform,
   SafeAreaView,
-  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -99,7 +97,7 @@ export default function App() {
   // --- 1. STUDENT PORTAL ---
   if (currentPortal === 'student') {
     return (
-      <View style={styles.safeArea}>
+      <SafeAreaView style={styles.safeArea}>
         <StatusBar style="light" />
         {isStudentLoggedIn ? (
           <StudentDashboardScreen
@@ -114,7 +112,7 @@ export default function App() {
             onBackToHome={() => setCurrentPortal('public')}
           />
         )}
-      </View>
+      </SafeAreaView>
     );
   }
 
@@ -122,13 +120,13 @@ export default function App() {
   if (currentPortal === 'teacher') {
     if (!isAdminLoggedIn || (userRole !== 'teacher' && userRole !== 'trainer')) {
       return (
-        <View style={styles.safeArea}>
+        <SafeAreaView style={styles.safeArea}>
           <StatusBar style="light" />
           <TeacherLoginScreen
             onLoginSuccess={handleStaffLoginSuccess}
             onBackToHome={() => setCurrentPortal('public')}
           />
-        </View>
+        </SafeAreaView>
       );
     }
 
@@ -144,93 +142,78 @@ export default function App() {
   if (currentPortal === 'admin') {
     if (!isAdminLoggedIn) {
       return (
-        <View style={styles.safeArea}>
+        <SafeAreaView style={styles.safeArea}>
           <StatusBar style="light" />
           <AdminLoginScreen
             onLoginSuccess={handleStaffLoginSuccess}
             onBackToHome={() => setCurrentPortal('public')}
           />
-        </View>
+        </SafeAreaView>
       );
     }
 
     return (
-      <View style={styles.safeArea}>
+      <SafeAreaView style={styles.safeArea}>
         <StatusBar style="light" />
         {/* Admin Navigation Bar */}
         <View style={styles.adminNavBar}>
-          <View style={styles.adminHeaderTop}>
-            <View style={styles.adminBrand}>
-              <View style={styles.adminLogo}>
-                <Text style={styles.adminLogoText}>M</Text>
-              </View>
-              <View>
-                <Text style={styles.adminBrandName}>MORPH ADMISSIONS & CRM</Text>
-                <Text style={styles.adminBrandSub}>COUNSELOR & ADMISSIONS DESK</Text>
-              </View>
+          <View style={styles.adminBrand}>
+            <View style={styles.adminLogo}>
+              <Text style={styles.adminLogoText}>M</Text>
             </View>
-
-            {/* Right Quick Actions */}
-            <View style={styles.adminNavRight}>
-              <TouchableOpacity
-                style={styles.switchTeacherBtn}
-                onPress={() => setCurrentPortal('teacher')}
-                activeOpacity={0.8}
-              >
-                <Text style={styles.switchTeacherText}>🎓 Faculty ↗</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={styles.switchPublicBtn}
-                onPress={() => setCurrentPortal('public')}
-                activeOpacity={0.8}
-              >
-                <Text style={styles.switchPublicText}>🌐 Website</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={styles.logoutBtn}
-                onPress={handleAdminLogout}
-                activeOpacity={0.8}
-              >
-                <Text style={styles.logoutBtnText}>Logout</Text>
-              </TouchableOpacity>
+            <View>
+              <Text style={styles.adminBrandName}>MORPH HR & ADMISSIONS</Text>
+              <Text style={styles.adminBrandSub}>COUNSELOR & ADMISSIONS DESK</Text>
             </View>
           </View>
 
-          {/* Smooth Horizontal Scrollable Navigation Tabs */}
-          <View style={styles.adminTabsContainer}>
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.adminTabsScrollContent}
-            >
-              {[
-                { id: 'dashboard', label: '📊 Overview' },
-                { id: 'leads', label: '🎯 HR & Enquiries' },
-                { id: 'students', label: '🎓 Students' },
-                { id: 'teachers', label: '🧑‍🏫 Faculty' },
-                { id: 'fees', label: '💳 Fee Manager' },
-                { id: 'courses', label: '📚 Courses' },
-                { id: 'attendance', label: '📅 Attendance' },
-              ].map((tab) => (
-                <TouchableOpacity
-                  key={tab.id}
-                  style={[styles.adminTabBtn, adminTab === tab.id && styles.adminTabBtnActive]}
-                  onPress={() => setAdminTab(tab.id)}
-                  activeOpacity={0.75}
+          {/* Navigation Tabs */}
+          <View style={styles.adminTabs}>
+            {[
+              { id: 'dashboard', label: '📊 Overview' },
+              { id: 'leads', label: '🎯 HR & Enquiries' },
+              { id: 'students', label: '🎓 Students' },
+              { id: 'teachers', label: '🧑‍🏫 Faculty' },
+              { id: 'fees', label: '💳 Fee Manager' },
+              { id: 'courses', label: '📚 Courses' },
+              { id: 'attendance', label: '📅 Attendance' },
+            ].map((tab) => (
+              <TouchableOpacity
+                key={tab.id}
+                style={[styles.adminTabBtn, adminTab === tab.id && styles.adminTabBtnActive]}
+                onPress={() => setAdminTab(tab.id)}
+              >
+                <Text
+                  style={[
+                    styles.adminTabBtnText,
+                    adminTab === tab.id && styles.adminTabBtnTextActive,
+                  ]}
                 >
-                  <Text
-                    style={[
-                      styles.adminTabBtnText,
-                      adminTab === tab.id && styles.adminTabBtnTextActive,
-                    ]}
-                  >
-                    {tab.label}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
+                  {tab.label}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+
+          {/* Right Actions */}
+          <View style={styles.adminNavRight}>
+            <TouchableOpacity
+              style={styles.switchTeacherBtn}
+              onPress={() => setCurrentPortal('teacher')}
+            >
+              <Text style={styles.switchTeacherText}>🎓 Faculty ↗</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.switchPublicBtn}
+              onPress={() => setCurrentPortal('public')}
+            >
+              <Text style={styles.switchPublicText}>🌐 Website</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.logoutBtn} onPress={handleAdminLogout}>
+              <Text style={styles.logoutBtnText}>Logout</Text>
+            </TouchableOpacity>
           </View>
         </View>
 
@@ -248,7 +231,7 @@ export default function App() {
           {adminTab === 'fees' && <FeeManagerScreen />}
           {adminTab === 'attendance' && <TrainerAttendanceScreen />}
         </View>
-      </View>
+      </SafeAreaView>
     );
   }
 
@@ -270,7 +253,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: theme.colors.background,
     width: '100%',
-    minHeight: Platform.OS === 'web' ? '100vh' : '100%',
   },
   centerBox: {
     flex: 1,
@@ -278,19 +260,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   adminNavBar: {
-    backgroundColor: theme.colors.surfaceCard,
-    borderBottomWidth: 1,
-    borderBottomColor: theme.colors.border,
-    paddingTop: Platform.OS === 'android' ? (StatusBar.currentHeight || 24) + 4 : 8,
-  },
-  adminHeaderTop: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
-    paddingBottom: 10,
-    gap: 10,
+    paddingVertical: 12,
+    backgroundColor: theme.colors.surfaceCard,
+    borderBottomWidth: 1,
+    borderBottomColor: theme.colors.border,
     flexWrap: 'wrap',
+    gap: 10,
   },
   adminBrand: {
     flexDirection: 'row',
@@ -298,34 +277,56 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   adminLogo: {
-    width: 34,
-    height: 34,
+    width: 32,
+    height: 32,
     borderRadius: theme.radius.sm,
     backgroundColor: theme.colors.primary,
     alignItems: 'center',
     justifyContent: 'center',
-    ...theme.shadows.sm,
   },
   adminLogoText: {
     color: theme.colors.textDark,
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '900',
   },
   adminBrandName: {
     color: theme.colors.textPrimary,
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: '800',
-    letterSpacing: 0.5,
   },
   adminBrandSub: {
     color: theme.colors.textMuted,
-    fontSize: 9,
+    fontSize: 8,
     fontWeight: '700',
-    letterSpacing: 0.8,
+    letterSpacing: 1,
+  },
+  adminTabs: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 6,
+  },
+  adminTabBtn: {
+    paddingHorizontal: 12,
+    paddingVertical: 7,
+    borderRadius: theme.radius.sm,
+    backgroundColor: theme.colors.surface,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+  },
+  adminTabBtnActive: {
+    backgroundColor: theme.colors.primaryLight,
+    borderColor: theme.colors.primary,
+  },
+  adminTabBtnText: {
+    color: theme.colors.textSecondary,
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  adminTabBtnTextActive: {
+    color: theme.colors.primary,
   },
   adminNavRight: {
     flexDirection: 'row',
-    alignItems: 'center',
     gap: 8,
   },
   switchTeacherBtn: {
@@ -347,7 +348,7 @@ const styles = StyleSheet.create({
     borderRadius: theme.radius.sm,
     backgroundColor: theme.colors.surface,
     borderWidth: 1,
-    borderColor: theme.colors.borderLight,
+    borderColor: theme.colors.border,
   },
   switchPublicText: {
     color: theme.colors.accentSlate,
@@ -360,46 +361,12 @@ const styles = StyleSheet.create({
     borderRadius: theme.radius.sm,
     backgroundColor: theme.colors.surface,
     borderWidth: 1,
-    borderColor: theme.colors.dangerLight,
+    borderColor: theme.colors.border,
   },
   logoutBtnText: {
     color: theme.colors.danger,
     fontSize: 11,
     fontWeight: '700',
-  },
-  adminTabsContainer: {
-    borderTopWidth: 1,
-    borderTopColor: theme.colors.border,
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    backgroundColor: theme.colors.surface,
-  },
-  adminTabsScrollContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    paddingRight: 16,
-  },
-  adminTabBtn: {
-    paddingHorizontal: 14,
-    paddingVertical: 7,
-    borderRadius: theme.radius.sm,
-    backgroundColor: theme.colors.surfaceCard,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-  },
-  adminTabBtnActive: {
-    backgroundColor: theme.colors.primaryLight,
-    borderColor: theme.colors.primary,
-  },
-  adminTabBtnText: {
-    color: theme.colors.textSecondary,
-    fontSize: 12,
-    fontWeight: '700',
-  },
-  adminTabBtnTextActive: {
-    color: theme.colors.primary,
-    fontWeight: '800',
   },
   adminContent: {
     flex: 1,

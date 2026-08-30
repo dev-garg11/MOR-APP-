@@ -87,30 +87,14 @@ export function AiCounselorChatModal({ visible, onClose, onOpenEnquiry }) {
 
       setMessages((prev) => [...prev, aiMsg]);
     } catch (err) {
-      // Smart Instant Studio Knowledge Fallback
-      const lower = textToSend.toLowerCase();
-      let fallbackText = "Morph Academy is Chandigarh's premier creative technology & animation institute offering masterclasses in 3D Animation, Cinematic VFX, Unreal Engine 5 Game Design, and Graphic Design. We offer 100% placement assistance and 0% interest EMI plans!";
-
-      if (lower.includes('fee') || lower.includes('cost') || lower.includes('emi') || lower.includes('price')) {
-        fallbackText = "💰 Morph Academy course fees range from ₹45,000 to ₹1,20,000 depending on the program (Certificate, Diploma, or Masterclass). We offer 3, 6, and 12-month 0% interest EMI installment plans with zero hidden charges. Would you like our counselor to share the exact fee brochure on WhatsApp?";
-      } else if (lower.includes('3d') || lower.includes('animation') || lower.includes('maya') || lower.includes('blender')) {
-        fallbackText = "🎬 Our 3D Character Animation program covers Autodesk Maya, Blender, ZBrush, character rigging, facial lip-sync, and photorealistic rendering. Graduates build studio-ready showreels for gaming and film studios.";
-      } else if (lower.includes('vfx') || lower.includes('compositing') || lower.includes('nuke') || lower.includes('houdini')) {
-        fallbackText = "💥 The Cinematic VFX & Compositing Masterclass trains you in Foundry Nuke, Houdini pyro/fluid simulations, green-screen chroma keying, and multi-pass CGI integration. We have an on-campus chroma studio for live shoots!";
-      } else if (lower.includes('game') || lower.includes('unreal') || lower.includes('unity')) {
-        fallbackText = "🎮 The Unreal Engine 5 Game Art program trains you in real-time environment creation, Blueprint visual scripting, Nanite, Lumen lighting, and interactive VR development.";
-      } else if (lower.includes('placement') || lower.includes('job') || lower.includes('salary') || lower.includes('hiring')) {
-        fallbackText = "💼 Morph Academy provides 100% Placement Assistance! Our students are hired at top studios including Ubisoft, Rockstar Games, DNEG, Red Chillies VFX, Technicolor, and MPC Film with dedicated portfolio mentorship.";
-      }
-
-      const aiMsg = {
-        id: `ai-${Date.now()}`,
+      const errorMsg = {
+        id: `err-${Date.now()}`,
         sender: 'ai',
-        text: fallbackText,
-        leadCaptured: false,
+        text: '⚠️ I am having trouble connecting to the admissions server right now. You can click "Enquire" above or WhatsApp us directly at +91 98123 45678.',
+        isError: true,
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       };
-      setMessages((prev) => [...prev, aiMsg]);
+      setMessages((prev) => [...prev, errorMsg]);
     } finally {
       setLoading(false);
     }

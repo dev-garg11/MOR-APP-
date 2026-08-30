@@ -81,11 +81,11 @@ export function ContactScreen({ onEnquire }) {
 
       {/* Campus Location & Hours */}
       <View style={styles.card}>
-        <Text style={styles.cardTitle}>📍 Chandigarh Main Campus & Studios</Text>
+        <Text style={styles.cardTitle}>📍 Campus & Studio Facility</Text>
         <Text style={styles.campusAddress}>
-          Morph Academy — Creative Tech & Animation Studio,{'\n'}
-          SCO 58-59, 2nd Floor, Sub. City Center, Sector 34-A,{'\n'}
-          Chandigarh, 160022 (India)
+          Morph Creative Tech Academy,{'\n'}
+          Studio Tower, 4th Floor, Tech Innovation Park,{'\n'}
+          Sector 62, Creative Arts District, 201309
         </Text>
 
         <View style={styles.divider} />
@@ -93,10 +93,10 @@ export function ContactScreen({ onEnquire }) {
         <Text style={styles.hoursLabel}>🕒 ACADEMY & LAB TIMINGS</Text>
         <View style={styles.hoursRow}>
           <Text style={styles.hoursDay}>Monday – Saturday:</Text>
-          <Text style={styles.hoursTime}>9:00 AM – 7:30 PM</Text>
+          <Text style={styles.hoursTime}>9:00 AM – 8:00 PM</Text>
         </View>
         <View style={styles.hoursRow}>
-          <Text style={styles.hoursDay}>Sunday (Open Lab & Demo Classes):</Text>
+          <Text style={styles.hoursDay}>Sunday (Open Lab & Demos):</Text>
           <Text style={styles.hoursTime}>10:00 AM – 4:00 PM</Text>
         </View>
       </View>

@@ -139,7 +139,7 @@ export function StudentsDirectoryScreen({ onNavigate }) {
     <View style={styles.container}>
       {/* Top Header */}
       <View style={styles.header}>
-        <View style={styles.headerTitleBox}>
+        <View style={{ flex: 1 }}>
           <Text style={styles.headerBadge}>ACADEMIC RECORDS</Text>
           <Text style={styles.headerTitle}>Enrolled Students Directory</Text>
           <Text style={styles.headerSubtitle}>
@@ -147,10 +147,10 @@ export function StudentsDirectoryScreen({ onNavigate }) {
           </Text>
         </View>
         <View style={styles.headerBtnRow}>
-          <TouchableOpacity style={styles.admitBtn} onPress={handleOpenAdmitModal} activeOpacity={0.8}>
+          <TouchableOpacity style={styles.admitBtn} onPress={handleOpenAdmitModal}>
             <Text style={styles.admitBtnText}>➕ Admit Student</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.refreshBtn} onPress={fetchStudents} activeOpacity={0.8}>
+          <TouchableOpacity style={styles.refreshBtn} onPress={fetchStudents}>
             <Text style={styles.refreshBtnText}>🔄 Refresh</Text>
           </TouchableOpacity>
         </View>
@@ -581,37 +581,30 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    paddingHorizontal: 20,
+    alignItems: 'center',
+    paddingHorizontal: 22,
     paddingVertical: 16,
     backgroundColor: '#121622',
     borderBottomWidth: 1,
     borderBottomColor: '#1e2638',
     flexWrap: 'wrap',
-    gap: 12,
-  },
-  headerTitleBox: {
-    flex: 1,
-    minWidth: 260,
+    gap: 10,
   },
   headerBadge: {
     color: '#F59E0B',
     fontSize: 10,
     fontWeight: '800',
     letterSpacing: 1.2,
-    marginBottom: 4,
+    marginBottom: 2,
   },
   headerTitle: {
     color: '#FFFFFF',
     fontSize: 22,
     fontWeight: '900',
-    lineHeight: 28,
   },
   headerSubtitle: {
     color: '#94A3B8',
     fontSize: 12,
-    lineHeight: 18,
-    marginTop: 2,
   },
   refreshBtn: {
     backgroundColor: '#1a2030',

@@ -1,33 +1,22 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import {
   ActivityIndicator,
-  Animated,
-  Easing,
   Linking,
   Modal,
-  Platform,
-  ScrollView,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  useWindowDimensions,
   View,
 } from 'react-native';
 import { loginAdmin } from '../../services/endpoints';
 import { theme } from '../../theme';
 
 export function AdminLoginScreen({ onLoginSuccess, onBackToHome }) {
-  const { width } = useWindowDimensions();
-  const isDesktop = width >= 860;
-
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [isEmailFocused, setIsEmailFocused] = useState(false);
-  const [isPasswordFocused, setIsPasswordFocused] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [loginSuccess, setLoginSuccess] = useState(false);
   const [error, setError] = useState('');
 
   // Modals for Forgot Password & Add New Admin Info
@@ -36,51 +25,9 @@ export function AdminLoginScreen({ onLoginSuccess, onBackToHome }) {
   const [forgotEmail, setForgotEmail] = useState('');
   const [forgotMessage, setForgotMessage] = useState('');
 
-  // Animation values
-  const cardFadeAnim = useRef(new Animated.Value(0)).current;
-  const cardSlideAnim = useRef(new Animated.Value(18)).current;
-  const shakeAnim = useRef(new Animated.Value(0)).current;
-  const leftVisualFadeAnim = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    // Smooth Card Entrance Animation
-    Animated.parallel([
-      Animated.timing(cardFadeAnim, {
-        toValue: 1,
-        duration: 450,
-        easing: Easing.out(Easing.cubic),
-        useNativeDriver: true,
-      }),
-      Animated.timing(cardSlideAnim, {
-        toValue: 0,
-        duration: 450,
-        easing: Easing.out(Easing.cubic),
-        useNativeDriver: true,
-      }),
-      Animated.timing(leftVisualFadeAnim, {
-        toValue: 1,
-        duration: 600,
-        easing: Easing.out(Easing.ease),
-        useNativeDriver: true,
-      }),
-    ]).start();
-  }, []);
-
-  const triggerErrorShake = () => {
-    shakeAnim.setValue(0);
-    Animated.sequence([
-      Animated.timing(shakeAnim, { toValue: -6, duration: 60, useNativeDriver: true }),
-      Animated.timing(shakeAnim, { toValue: 6, duration: 60, useNativeDriver: true }),
-      Animated.timing(shakeAnim, { toValue: -4, duration: 60, useNativeDriver: true }),
-      Animated.timing(shakeAnim, { toValue: 4, duration: 60, useNativeDriver: true }),
-      Animated.timing(shakeAnim, { toValue: 0, duration: 60, useNativeDriver: true }),
-    ]).start();
-  };
-
   const handleLogin = async () => {
     if (!email.trim() || !password.trim()) {
-      setError('Please enter both staff email and password.');
-      triggerErrorShake();
+      setError('Please enter both email and password.');
       return;
     }
 
@@ -93,17 +40,12 @@ export function AdminLoginScreen({ onLoginSuccess, onBackToHome }) {
         password: password.trim(),
       });
       const role = res?.data?.admin?.role?.toLowerCase() || 'admin';
-      
-      // Success button transition (350ms)
-      setLoginSuccess(true);
-      setTimeout(() => {
-        onLoginSuccess(role);
-      }, 350);
+      onLoginSuccess(role);
     } catch (err) {
       setError(
-        err.message || 'Invalid staff credentials or server unreachable. Please try again.'
+        err.message || 'Invalid admin credentials or server offline. Please try again.'
       );
-      triggerErrorShake();
+    } finally {
       setLoading(false);
     }
   };
@@ -119,210 +61,112 @@ export function AdminLoginScreen({ onLoginSuccess, onBackToHome }) {
   };
 
   return (
-    <ScrollView
-      contentContainerStyle={styles.scrollContainer}
-      showsVerticalScrollIndicator={false}
-      keyboardShouldPersistTaps="handled"
-    >
-      <View style={[styles.mainWrapper, isDesktop && styles.mainWrapperDesktop]}>
-        
-        {/* Left / Visual Side — Desktop Only */}
-        {isDesktop && (
-          <Animated.View style={[styles.visualSide, { opacity: leftVisualFadeAnim }]}>
-            <View style={styles.visualHeader}>
-              <View style={styles.visualBadge}>
-                <Text style={styles.visualBadgeText}>M</Text>
-              </View>
-              <View>
-                <Text style={styles.visualTitle}>MORPH ACADEMY</Text>
-                <Text style={styles.visualSub}>CREATIVE TECH & 3D STUDIO</Text>
-              </View>
-            </View>
+    <View style={styles.container}>
+      <View style={styles.card}>
+        <TouchableOpacity style={styles.backBtn} onPress={onBackToHome}>
+          <Text style={styles.backBtnText}>← Back to Website</Text>
+        </TouchableOpacity>
 
-            <View style={styles.visualCenter}>
-              <Text style={styles.visualHeroHeadline}>
-                Admissions & Management Portal
-              </Text>
-              <Text style={styles.visualHeroDesc}>
-                Empowering counselors, academic coordinators, and administration with real-time leads CRM, batch allocation, and fee management.
-              </Text>
+        <View style={styles.logoBadge}>
+          <Text style={styles.logoText}>M</Text>
+        </View>
 
-              {/* Studio Tags Grid */}
-              <View style={styles.visualTagsGrid}>
-                <View style={styles.visualTagPill}>
-                  <Text style={styles.visualTagText}>🎬 3D Animation & Maya</Text>
-                </View>
-                <View style={styles.visualTagPill}>
-                  <Text style={styles.visualTagText}>💥 Cinematic VFX & Nuke</Text>
-                </View>
-                <View style={styles.visualTagPill}>
-                  <Text style={styles.visualTagText}>🎮 Unreal Engine 5</Text>
-                </View>
-                <View style={styles.visualTagPill}>
-                  <Text style={styles.visualTagText}>🎨 UI/UX & Web</Text>
-                </View>
-              </View>
-            </View>
+        <Text style={styles.badge}>HR & ADMISSIONS DESK</Text>
+        <Text style={styles.title}>HR & Admissions Portal</Text>
+        <Text style={styles.subtitle}>
+          Sign in to manage student admissions, leads CRM, batches, courses & fee installments.
+        </Text>
 
-            <View style={styles.visualFooter}>
-              <View style={styles.telemetryRow}>
-                <View style={styles.telemetryDot} />
-                <Text style={styles.telemetryText}>Admissions Cloud Active • ISO 9001:2015</Text>
-              </View>
-              <Text style={styles.telemetryCampus}>Chandigarh Campus (SCO 58-59, Sector 34-A)</Text>
-            </View>
-          </Animated.View>
-        )}
+        <View style={styles.form}>
+          <Text style={styles.label}>HR Counselor / Staff Email</Text>
+          <TextInput
+            style={styles.input}
+            value={email}
+            onChangeText={setEmail}
+            placeholder="e.g. hr@morphacademy.com or admin@morphacademy.com"
+            placeholderTextColor={theme.colors.textMuted}
+            keyboardType="email-address"
+            autoCapitalize="none"
+          />
 
-        {/* Right / Login Card Side */}
-        <Animated.View
-          style={[
-            styles.card,
-            {
-              opacity: cardFadeAnim,
-              transform: [{ translateY: cardSlideAnim }, { translateX: shakeAnim }],
-            },
-          ]}
-        >
-          <TouchableOpacity style={styles.backBtn} onPress={onBackToHome} activeOpacity={0.7}>
-            <Text style={styles.backBtnText}>← Back to Website</Text>
+          <View style={styles.passwordLabelRow}>
+            <Text style={styles.label}>Password</Text>
+            <TouchableOpacity onPress={() => setForgotModalVisible(true)}>
+              <Text style={styles.forgotLinkText}>Forgot Password?</Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* Password Input with Show/Hide Toggle */}
+          <View style={styles.passwordInputContainer}>
+            <TextInput
+              style={styles.passwordInput}
+              value={password}
+              onChangeText={setPassword}
+              placeholder="Enter secure password"
+              placeholderTextColor={theme.colors.textMuted}
+              secureTextEntry={!showPassword}
+            />
+            <TouchableOpacity
+              style={styles.eyeBtn}
+              onPress={() => setShowPassword(!showPassword)}
+            >
+              <Text style={styles.eyeText}>{showPassword ? '🙈 Hide' : '👁 Show'}</Text>
+            </TouchableOpacity>
+          </View>
+
+          {error ? <Text style={styles.errorText}>{error}</Text> : null}
+
+          <TouchableOpacity
+            style={[styles.loginBtn, loading && styles.btnDisabled]}
+            onPress={handleLogin}
+            disabled={loading}
+          >
+            {loading ? (
+              <ActivityIndicator color={theme.colors.textDark} />
+            ) : (
+              <Text style={styles.loginBtnText}>Sign In to HR Portal ➔</Text>
+            )}
           </TouchableOpacity>
 
-          <View style={styles.logoBadge}>
-            <Text style={styles.logoText}>M</Text>
-          </View>
+          {/* 1-Click Demo Fill Helpers */}
+          <TouchableOpacity
+            style={styles.quickFillBtn}
+            onPress={() => {
+              setEmail('hr@morphacademy.com');
+              setPassword('Hr@12345');
+            }}
+          >
+            <Text style={styles.quickFillText}>
+              🎯 Auto-fill HR Counselor (hr@morphacademy.com / Hr@12345)
+            </Text>
+          </TouchableOpacity>
 
-          <Text style={styles.badge}>HR & ADMISSIONS DESK</Text>
-          <Text style={styles.title}>Staff Portal Login</Text>
-          <Text style={styles.subtitle}>
-            Sign in to manage student admissions, leads CRM, batches, courses & fees.
-          </Text>
+          <TouchableOpacity
+            style={[styles.quickFillBtn, { borderColor: theme.colors.primaryBorder }]}
+            onPress={() => {
+              setEmail('admin@morphacademy.com');
+              setPassword('Admin@12345');
+            }}
+          >
+            <Text style={[styles.quickFillText, { color: theme.colors.primary }]}>
+              🔑 Auto-fill Super Admin (admin@morphacademy.com / Admin@12345)
+            </Text>
+          </TouchableOpacity>
 
-          <View style={styles.form}>
-            <Text style={styles.label}>Staff Email Address</Text>
-            <TextInput
-              style={[
-                styles.input,
-                isEmailFocused && styles.inputFocused,
-              ]}
-              value={email}
-              onChangeText={(txt) => {
-                setEmail(txt);
-                if (error) setError('');
-              }}
-              onFocus={() => setIsEmailFocused(true)}
-              onBlur={() => setIsEmailFocused(false)}
-              placeholder="e.g. hr@morphacademy.com"
-              placeholderTextColor={theme.colors.textMuted}
-              keyboardType="email-address"
-              autoCapitalize="none"
-            />
+          {/* How to add new admin button */}
+          <TouchableOpacity
+            style={styles.newAdminHelperBtn}
+            onPress={() => setNewAdminModalVisible(true)}
+          >
+            <Text style={styles.newAdminHelperText}>
+              ➕ How to add new HR / Counselor accounts?
+            </Text>
+          </TouchableOpacity>
+        </View>
 
-            <View style={styles.passwordLabelRow}>
-              <Text style={styles.label}>Password</Text>
-              <TouchableOpacity onPress={() => setForgotModalVisible(true)} activeOpacity={0.7}>
-                <Text style={styles.forgotLinkText}>Forgot Password?</Text>
-              </TouchableOpacity>
-            </View>
-
-            {/* Password Input with Show/Hide Toggle */}
-            <View
-              style={[
-                styles.passwordInputContainer,
-                isPasswordFocused && styles.inputFocused,
-              ]}
-            >
-              <TextInput
-                style={styles.passwordInput}
-                value={password}
-                onChangeText={(txt) => {
-                  setPassword(txt);
-                  if (error) setError('');
-                }}
-                onFocus={() => setIsPasswordFocused(true)}
-                onBlur={() => setIsPasswordFocused(false)}
-                placeholder="Enter secure password"
-                placeholderTextColor={theme.colors.textMuted}
-                secureTextEntry={!showPassword}
-              />
-              <TouchableOpacity
-                style={styles.eyeBtn}
-                onPress={() => setShowPassword(!showPassword)}
-                activeOpacity={0.7}
-              >
-                <Text style={styles.eyeText}>{showPassword ? '🙈 Hide' : '👁 Show'}</Text>
-              </TouchableOpacity>
-            </View>
-
-            {error ? <Text style={styles.errorText}>{error}</Text> : null}
-
-            <TouchableOpacity
-              style={[
-                styles.loginBtn,
-                loading && styles.btnDisabled,
-                loginSuccess && styles.loginBtnSuccess,
-              ]}
-              onPress={handleLogin}
-              disabled={loading || loginSuccess}
-              activeOpacity={0.85}
-            >
-              {loginSuccess ? (
-                <Text style={styles.loginBtnText}>✓ Access Granted</Text>
-              ) : loading ? (
-                <View style={styles.loadingRow}>
-                  <ActivityIndicator color={theme.colors.textDark} size="small" />
-                  <Text style={styles.loginBtnText}>Signing you in…</Text>
-                </View>
-              ) : (
-                <Text style={styles.loginBtnText}>Sign In to Admissions Portal ➔</Text>
-              )}
-            </TouchableOpacity>
-
-            {/* 1-Click Demo Fill Helpers */}
-            <TouchableOpacity
-              style={styles.quickFillBtn}
-              onPress={() => {
-                setEmail('hr@morphacademy.com');
-                setPassword('Hr@12345');
-                setError('');
-              }}
-              activeOpacity={0.7}
-            >
-              <Text style={styles.quickFillText}>
-                🎯 1-Click Fill: HR Counselor (hr@morphacademy.com)
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[styles.quickFillBtn, { borderColor: theme.colors.primaryBorder }]}
-              onPress={() => {
-                setEmail('admin@morphacademy.com');
-                setPassword('Admin@12345');
-                setError('');
-              }}
-              activeOpacity={0.7}
-            >
-              <Text style={[styles.quickFillText, { color: theme.colors.primary }]}>
-                🔑 1-Click Fill: Super Admin (admin@morphacademy.com)
-              </Text>
-            </TouchableOpacity>
-
-            {/* How to add new admin button */}
-            <TouchableOpacity
-              style={styles.newAdminHelperBtn}
-              onPress={() => setNewAdminModalVisible(true)}
-              activeOpacity={0.7}
-            >
-              <Text style={styles.newAdminHelperText}>
-                ➕ How to add new HR / Counselor accounts?
-              </Text>
-            </TouchableOpacity>
-          </View>
-
-          <Text style={styles.footerHint}>
-            Default Super Admin: admin@morphacademy.com | Pass: Admin@12345
-          </Text>
-        </Animated.View>
+        <Text style={styles.footerHint}>
+          Default Login: admin@morphacademy.com | Password: Admin@12345
+        </Text>
       </View>
 
       {/* 1. FORGOT PASSWORD MODAL */}
@@ -347,7 +191,7 @@ export function AdminLoginScreen({ onLoginSuccess, onBackToHome }) {
 
             {forgotMessage ? <Text style={styles.modalSuccessText}>{forgotMessage}</Text> : null}
 
-            <TouchableOpacity style={styles.modalPrimaryBtn} onPress={handleForgotSubmit} activeOpacity={0.8}>
+            <TouchableOpacity style={styles.modalPrimaryBtn} onPress={handleForgotSubmit}>
               <Text style={styles.modalPrimaryBtnText}>Send Reset Link ➔</Text>
             </TouchableOpacity>
 
@@ -355,12 +199,11 @@ export function AdminLoginScreen({ onLoginSuccess, onBackToHome }) {
               style={styles.modalWhatsAppBtn}
               onPress={() =>
                 Linking.openURL(
-                  'https://wa.me/919876543210?text=Hi%20Super%20Admin%2C%20I%20am%20a%20staff%20counselor%20and%20need%20my%20password%20reset.'
+                  'https://wa.me/919876543210?text=Hi%20Super%20Admin%2C%20I%20need%20to%20reset%20my%20Morph%20Academy%20staff%20account%20password.'
                 )
               }
-              activeOpacity={0.8}
             >
-              <Text style={styles.modalWhatsAppText}>💬 WhatsApp Super Admin</Text>
+              <Text style={styles.modalWhatsAppText}>💬 Contact Super Admin on WhatsApp</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -368,9 +211,7 @@ export function AdminLoginScreen({ onLoginSuccess, onBackToHome }) {
               onPress={() => {
                 setForgotModalVisible(false);
                 setForgotMessage('');
-                setForgotEmail('');
               }}
-              activeOpacity={0.7}
             >
               <Text style={styles.modalCloseText}>Close</Text>
             </TouchableOpacity>
@@ -378,188 +219,68 @@ export function AdminLoginScreen({ onLoginSuccess, onBackToHome }) {
         </View>
       </Modal>
 
-      {/* 2. ADD NEW ADMIN / COUNSELOR GUIDE MODAL */}
+      {/* 2. HOW TO ADD NEW ADMIN / STAFF GUIDE MODAL */}
       <Modal visible={newAdminModalVisible} transparent animationType="fade">
         <View style={styles.modalBackdrop}>
-          <View style={[styles.modalCard, { maxWidth: 480 }]}>
-            <Text style={styles.modalTitle}>➕ Onboarding New Staff</Text>
+          <View style={styles.modalCard}>
+            <Text style={styles.modalTitle}>👥 Adding New Staff & Admins</Text>
             <Text style={styles.modalSub}>
-              To create new Counselor, Receptionist, or Faculty logins:
+              Future me jab bhi aapko naye staff (Counselor, Trainer, Admin) ko access dena ho:
             </Text>
 
             <View style={styles.guideStep}>
               <Text style={styles.guideStepNum}>1</Text>
               <Text style={styles.guideStepText}>
-                Log in as <Text style={{ color: theme.colors.primary, fontWeight: '700' }}>Super Admin</Text> using admin@morphacademy.com.
+                <Text style={{ fontWeight: '800', color: theme.colors.primary }}>Super Admin Login:</Text>{' '}
+                Apne Super Admin account (`admin@morphacademy.com`) se sign-in karein.
               </Text>
             </View>
 
             <View style={styles.guideStep}>
               <Text style={styles.guideStepNum}>2</Text>
               <Text style={styles.guideStepText}>
-                Go to the <Text style={{ color: theme.colors.primary, fontWeight: '700' }}>HR & Enquiries</Text> or <Text style={{ color: theme.colors.primary, fontWeight: '700' }}>Faculty</Text> tab.
+                <Text style={{ fontWeight: '800', color: theme.colors.primary }}>Direct API / DB Script:</Text>{' '}
+                Backend folder me `python reset_admin.py` chala kar naye staff ka Name, Email, Role, aur Password turant create ya reset kar sakte hain.
               </Text>
             </View>
 
             <View style={styles.guideStep}>
               <Text style={styles.guideStepNum}>3</Text>
               <Text style={styles.guideStepText}>
-                Click <Text style={{ color: theme.colors.primary, fontWeight: '700' }}>➕ Onboard New Staff / Trainer</Text> to issue verified logins.
+                <Text style={{ fontWeight: '800', color: theme.colors.primary }}>1-Click WhatsApp Credentials:</Text>{' '}
+                Naye staff ko unka email aur password direct WhatsApp ya email par bhej dein.
               </Text>
             </View>
 
             <TouchableOpacity
-              style={[styles.modalPrimaryBtn, { marginTop: 10 }]}
+              style={styles.modalPrimaryBtn}
               onPress={() => setNewAdminModalVisible(false)}
-              activeOpacity={0.8}
             >
-              <Text style={styles.modalPrimaryBtnText}>Got it, Close Guide ➔</Text>
+              <Text style={styles.modalPrimaryBtnText}>Got it! Close Guide</Text>
             </TouchableOpacity>
           </View>
         </View>
       </Modal>
-    </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  scrollContainer: {
-    flexGrow: 1,
-    backgroundColor: '#090D16',
+  container: {
+    flex: 1,
+    backgroundColor: theme.colors.background,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 16,
-    minHeight: Platform.OS === 'web' ? '100vh' : '100%',
-  },
-  mainWrapper: {
-    width: '100%',
-    maxWidth: 440,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  mainWrapperDesktop: {
-    maxWidth: 960,
-    flexDirection: 'row',
-    alignItems: 'stretch',
-    backgroundColor: '#0E1422',
-    borderRadius: theme.radius.xl,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.08)',
-    overflow: 'hidden',
-    ...theme.shadows.md,
-  },
-  visualSide: {
-    flex: 1.1,
-    backgroundColor: '#121A2D',
-    padding: 36,
-    justifyContent: 'space-between',
-    borderRightWidth: 1,
-    borderRightColor: 'rgba(255, 255, 255, 0.08)',
-  },
-  visualHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  visualBadge: {
-    width: 42,
-    height: 42,
-    borderRadius: 10,
-    backgroundColor: '#F5A623',
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#F5A623',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.35,
-    shadowRadius: 10,
-    elevation: 6,
-  },
-  visualBadgeText: {
-    color: '#090D16',
-    fontSize: 22,
-    fontWeight: '900',
-  },
-  visualTitle: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '900',
-    letterSpacing: 1,
-  },
-  visualSub: {
-    color: '#F5A623',
-    fontSize: 9,
-    fontWeight: '800',
-    letterSpacing: 1.2,
-  },
-  visualCenter: {
-    marginVertical: 28,
-  },
-  visualHeroHeadline: {
-    color: '#FFFFFF',
-    fontSize: 26,
-    fontWeight: '900',
-    lineHeight: 32,
-    marginBottom: 10,
-  },
-  visualHeroDesc: {
-    color: '#94A3B8',
-    fontSize: 13,
-    lineHeight: 20,
-    marginBottom: 20,
-  },
-  visualTagsGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-  },
-  visualTagPill: {
-    backgroundColor: 'rgba(22, 32, 55, 0.90)',
-    paddingHorizontal: 12,
-    paddingVertical: 7,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.10)',
-  },
-  visualTagText: {
-    color: '#CBD5E1',
-    fontSize: 11,
-    fontWeight: '700',
-  },
-  visualFooter: {
-    borderTopWidth: 1,
-    borderTopColor: 'rgba(255, 255, 255, 0.08)',
-    paddingTop: 16,
-    gap: 4,
-  },
-  telemetryRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  telemetryDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: '#10B981',
-  },
-  telemetryText: {
-    color: '#10B981',
-    fontSize: 11,
-    fontWeight: '700',
-  },
-  telemetryCampus: {
-    color: '#64748B',
-    fontSize: 11,
+    padding: 20,
   },
   card: {
-    flex: 1,
     width: '100%',
     maxWidth: 440,
-    backgroundColor: '#141C2E',
+    backgroundColor: theme.colors.surfaceCard,
     borderRadius: theme.radius.lg,
-    padding: 30,
+    padding: 28,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.08)',
+    borderColor: theme.colors.border,
     alignItems: 'center',
     ...theme.shadows.md,
   },
@@ -580,7 +301,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 14,
-    ...theme.shadows.glowPrimary,
   },
   logoText: {
     color: theme.colors.textDark,
@@ -597,20 +317,19 @@ const styles = StyleSheet.create({
   title: {
     color: theme.colors.textPrimary,
     fontSize: 22,
-    fontWeight: '900',
+    fontWeight: '800',
     marginBottom: 6,
     textAlign: 'center',
   },
   subtitle: {
     color: theme.colors.textSecondary,
-    fontSize: 12,
+    fontSize: 13,
     textAlign: 'center',
-    marginBottom: 20,
-    lineHeight: 17,
+    marginBottom: 24,
   },
   form: {
     width: '100%',
-    gap: 10,
+    gap: 12,
   },
   label: {
     color: theme.colors.textSecondary,
@@ -636,10 +355,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 12,
     fontSize: 14,
-  },
-  inputFocused: {
-    borderColor: theme.colors.primary,
-    backgroundColor: '#182238',
   },
   passwordInputContainer: {
     flexDirection: 'row',
@@ -671,16 +386,8 @@ const styles = StyleSheet.create({
     borderRadius: theme.radius.md,
     paddingVertical: 14,
     alignItems: 'center',
-    marginTop: 6,
+    marginTop: 8,
     ...theme.shadows.glowPrimary,
-  },
-  loginBtnSuccess: {
-    backgroundColor: '#10B981',
-  },
-  loadingRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
   },
   loginBtnText: {
     color: theme.colors.textDark,
@@ -688,11 +395,11 @@ const styles = StyleSheet.create({
     fontWeight: '800',
   },
   btnDisabled: {
-    opacity: 0.7,
+    opacity: 0.6,
   },
   quickFillBtn: {
     backgroundColor: theme.colors.surface,
-    paddingVertical: 9,
+    paddingVertical: 10,
     borderRadius: theme.radius.sm,
     borderWidth: 1,
     borderColor: theme.colors.border,
@@ -706,7 +413,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   newAdminHelperBtn: {
-    paddingVertical: 4,
+    paddingVertical: 6,
     alignItems: 'center',
   },
   newAdminHelperText: {
@@ -716,17 +423,14 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: theme.colors.danger,
-    fontSize: 12,
+    fontSize: 13,
     textAlign: 'center',
-    backgroundColor: theme.colors.dangerLight,
-    padding: 8,
-    borderRadius: theme.radius.xs,
   },
   footerHint: {
     color: theme.colors.textMuted,
-    fontSize: 10,
+    fontSize: 11,
     textAlign: 'center',
-    marginTop: 16,
+    marginTop: 20,
   },
   modalBackdrop: {
     flex: 1,

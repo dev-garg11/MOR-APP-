@@ -114,7 +114,7 @@ export function TeachersDirectoryScreen() {
     <View style={styles.container}>
       {/* Top Header */}
       <View style={styles.header}>
-        <View style={styles.headerTitleBox}>
+        <View style={{ flex: 1 }}>
           <Text style={styles.headerBadge}>FACULTY & TRAINER MANAGEMENT</Text>
           <Text style={styles.headerTitle}>Faculty & Mentors Directory</Text>
           <Text style={styles.headerSubtitle}>
@@ -122,10 +122,10 @@ export function TeachersDirectoryScreen() {
           </Text>
         </View>
         <View style={styles.headerBtnRow}>
-          <TouchableOpacity style={styles.onboardBtn} onPress={handleOpenOnboard} activeOpacity={0.8}>
+          <TouchableOpacity style={styles.onboardBtn} onPress={handleOpenOnboard}>
             <Text style={styles.onboardBtnText}>➕ Onboard New Faculty</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.refreshBtn} onPress={fetchTeachers} activeOpacity={0.8}>
+          <TouchableOpacity style={styles.refreshBtn} onPress={fetchTeachers}>
             <Text style={styles.refreshBtnText}>🔄 Refresh</Text>
           </TouchableOpacity>
         </View>
@@ -481,41 +481,34 @@ const styles = StyleSheet.create({
  flex: 1,
  backgroundColor: '#0c0f17',
  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    backgroundColor: '#121622',
-    borderBottomWidth: 1,
-    borderBottomColor: '#1e2638',
-    flexWrap: 'wrap',
-    gap: 12,
-  },
-  headerTitleBox: {
-    flex: 1,
-    minWidth: 260,
-  },
-  headerBadge: {
-    color: '#F59E0B',
-    fontSize: 10,
-    fontWeight: '800',
-    letterSpacing: 1.2,
-    marginBottom: 4,
-  },
-  headerTitle: {
-    color: '#FFFFFF',
-    fontSize: 22,
-    fontWeight: '900',
-    lineHeight: 28,
-  },
-  headerSubtitle: {
-    color: '#94A3B8',
-    fontSize: 12,
-    lineHeight: 18,
-    marginTop: 2,
-  },
+ header: {
+ flexDirection: 'row',
+ justifyContent: 'space-between',
+ alignItems: 'center',
+ paddingHorizontal: 22,
+ paddingVertical: 16,
+ backgroundColor: '#121622',
+ borderBottomWidth: 1,
+ borderBottomColor: '#1e2638',
+ flexWrap: 'wrap',
+ gap: 10,
+ },
+ headerBadge: {
+ color: '#F59E0B',
+ fontSize: 10,
+ fontWeight: '800',
+ letterSpacing: 1.2,
+ marginBottom: 2,
+ },
+ headerTitle: {
+ color: '#FFFFFF',
+ fontSize: 22,
+ fontWeight: '900',
+ },
+ headerSubtitle: {
+ color: '#94A3B8',
+ fontSize: 12,
+ },
  headerBtnRow: {
  flexDirection: 'row',
  alignItems: 'center',

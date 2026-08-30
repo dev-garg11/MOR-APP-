@@ -1,78 +1,26 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import {
   ActivityIndicator,
-  Animated,
-  Easing,
   Linking,
-  Platform,
-  ScrollView,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  useWindowDimensions,
   View,
 } from 'react-native';
 import { loginStudent } from '../../services/endpoints';
 import { theme } from '../../theme';
 
 export function StudentLoginScreen({ onLoginSuccess, onBackToHome }) {
-  const { width } = useWindowDimensions();
-  const isDesktop = width >= 860;
-
   const [loginId, setLoginId] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [isIdFocused, setIsIdFocused] = useState(false);
-  const [isPassFocused, setIsPassFocused] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [loginSuccess, setLoginSuccess] = useState(false);
   const [error, setError] = useState('');
-
-  // Animation values
-  const cardFadeAnim = useRef(new Animated.Value(0)).current;
-  const cardSlideAnim = useRef(new Animated.Value(18)).current;
-  const shakeAnim = useRef(new Animated.Value(0)).current;
-  const leftVisualFadeAnim = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    Animated.parallel([
-      Animated.timing(cardFadeAnim, {
-        toValue: 1,
-        duration: 450,
-        easing: Easing.out(Easing.cubic),
-        useNativeDriver: true,
-      }),
-      Animated.timing(cardSlideAnim, {
-        toValue: 0,
-        duration: 450,
-        easing: Easing.out(Easing.cubic),
-        useNativeDriver: true,
-      }),
-      Animated.timing(leftVisualFadeAnim, {
-        toValue: 1,
-        duration: 600,
-        easing: Easing.out(Easing.ease),
-        useNativeDriver: true,
-      }),
-    ]).start();
-  }, []);
-
-  const triggerErrorShake = () => {
-    shakeAnim.setValue(0);
-    Animated.sequence([
-      Animated.timing(shakeAnim, { toValue: -6, duration: 60, useNativeDriver: true }),
-      Animated.timing(shakeAnim, { toValue: 6, duration: 60, useNativeDriver: true }),
-      Animated.timing(shakeAnim, { toValue: -4, duration: 60, useNativeDriver: true }),
-      Animated.timing(shakeAnim, { toValue: 4, duration: 60, useNativeDriver: true }),
-      Animated.timing(shakeAnim, { toValue: 0, duration: 60, useNativeDriver: true }),
-    ]).start();
-  };
 
   const handleLogin = async () => {
     if (!loginId.trim() || !password.trim()) {
       setError('Please enter both your Student ID and Password.');
-      triggerErrorShake();
       return;
     }
 
@@ -84,16 +32,12 @@ export function StudentLoginScreen({ onLoginSuccess, onBackToHome }) {
         loginId: loginId.trim().toUpperCase(),
         password: password.trim(),
       });
-      
-      setLoginSuccess(true);
-      setTimeout(() => {
-        onLoginSuccess();
-      }, 350);
+      onLoginSuccess();
     } catch (err) {
       setError(
         err.message || 'Invalid Student ID or Password. Check credentials with reception.'
       );
-      triggerErrorShake();
+    } finally {
       setLoading(false);
     }
   };
@@ -105,347 +49,130 @@ export function StudentLoginScreen({ onLoginSuccess, onBackToHome }) {
   };
 
   return (
-    <ScrollView
-      contentContainerStyle={styles.scrollContainer}
-      showsVerticalScrollIndicator={false}
-      keyboardShouldPersistTaps="handled"
-    >
-      <View style={[styles.mainWrapper, isDesktop && styles.mainWrapperDesktop]}>
-        
-        {/* Left / Visual Side — Desktop Only */}
-        {isDesktop && (
-          <Animated.View style={[styles.visualSide, { opacity: leftVisualFadeAnim }]}>
-            <View style={styles.visualHeader}>
-              <View style={styles.visualBadge}>
-                <Text style={styles.visualBadgeText}>M</Text>
-              </View>
-              <View>
-                <Text style={styles.visualTitle}>MY MORPH</Text>
-                <Text style={styles.visualSub}>STUDENT LEARNING ECOSYSTEM</Text>
-              </View>
-            </View>
+    <View style={styles.container}>
+      <View style={styles.card}>
+        <TouchableOpacity style={styles.backBtn} onPress={onBackToHome}>
+          <Text style={styles.backBtnText}>← Back to Website</Text>
+        </TouchableOpacity>
 
-            <View style={styles.visualCenter}>
-              <Text style={styles.visualHeroHeadline}>
-                Student Self-Service & Progress Hub
-              </Text>
-              <Text style={styles.visualHeroDesc}>
-                Access your batch schedule, track live attendance percentage, view 0% EMI installment breakdown, and submit portfolio project showreels.
-              </Text>
+        <View style={styles.logoBadge}>
+          <Text style={styles.logoText}>M</Text>
+        </View>
 
-              <View style={styles.visualTagsGrid}>
-                <View style={styles.visualTagPill}>
-                  <Text style={styles.visualTagText}>📊 Attendance Tracker</Text>
-                </View>
-                <View style={styles.visualTagPill}>
-                  <Text style={styles.visualTagText}>💳 0% EMI Fee Ledger</Text>
-                </View>
-                <View style={styles.visualTagPill}>
-                  <Text style={styles.visualTagText}>🎬 Project Submissions</Text>
-                </View>
-                <View style={styles.visualTagPill}>
-                  <Text style={styles.visualTagText}>💼 Placement Cell Drives</Text>
-                </View>
-              </View>
-            </View>
+        <Text style={styles.badge}>MY MORPH</Text>
+        <Text style={styles.title}>Student Self-Service Portal</Text>
+        <Text style={styles.subtitle}>
+          Sign in to check attendance, fee installments, and class notices.
+        </Text>
 
-            <View style={styles.visualFooter}>
-              <View style={styles.telemetryRow}>
-                <View style={styles.telemetryDot} />
-                <Text style={styles.telemetryText}>Student Portal v2.6 Active</Text>
-              </View>
-              <Text style={styles.telemetryCampus}>Morph Academy Chandigarh • Student Desk</Text>
-            </View>
-          </Animated.View>
-        )}
+        <View style={styles.form}>
+          <Text style={styles.label}>Student ID / Roll No</Text>
+          <TextInput
+            style={styles.input}
+            value={loginId}
+            onChangeText={setLoginId}
+            placeholder="e.g. STU-00001"
+            placeholderTextColor={theme.colors.textMuted}
+            autoCapitalize="characters"
+          />
 
-        {/* Right / Login Card */}
-        <Animated.View
-          style={[
-            styles.card,
-            {
-              opacity: cardFadeAnim,
-              transform: [{ translateY: cardSlideAnim }, { translateX: shakeAnim }],
-            },
-          ]}
-        >
-          <TouchableOpacity style={styles.backBtn} onPress={onBackToHome} activeOpacity={0.7}>
-            <Text style={styles.backBtnText}>← Back to Website</Text>
-          </TouchableOpacity>
-
-          <View style={styles.logoBadge}>
-            <Text style={styles.logoText}>M</Text>
-          </View>
-
-          <Text style={styles.badge}>STUDENT PORTAL</Text>
-          <Text style={styles.title}>Student Sign In</Text>
-          <Text style={styles.subtitle}>
-            Sign in to check attendance, fee installments, and batch notices.
-          </Text>
-
-          <View style={styles.form}>
-            <Text style={styles.label}>Student ID / Roll No</Text>
-            <TextInput
-              style={[styles.input, isIdFocused && styles.inputFocused]}
-              value={loginId}
-              onChangeText={(txt) => {
-                setLoginId(txt);
-                if (error) setError('');
-              }}
-              onFocus={() => setIsIdFocused(true)}
-              onBlur={() => setIsIdFocused(false)}
-              placeholder="e.g. STU-00001 or MA-2026-001"
-              placeholderTextColor={theme.colors.textMuted}
-              autoCapitalize="characters"
-            />
-
-            <View style={styles.passwordLabelRow}>
-              <Text style={styles.label}>Password</Text>
-              <TouchableOpacity onPress={handleForgotStudentPass} activeOpacity={0.7}>
-                <Text style={styles.forgotLinkText}>Forgot Password?</Text>
-              </TouchableOpacity>
-            </View>
-
-            {/* Password Input with Show/Hide Toggle */}
-            <View
-              style={[
-                styles.passwordInputContainer,
-                isPassFocused && styles.inputFocused,
-              ]}
-            >
-              <TextInput
-                style={styles.passwordInput}
-                value={password}
-                onChangeText={(txt) => {
-                  setPassword(txt);
-                  if (error) setError('');
-                }}
-                onFocus={() => setIsPassFocused(true)}
-                onBlur={() => setIsPassFocused(false)}
-                placeholder="Enter password issued by academy"
-                placeholderTextColor={theme.colors.textMuted}
-                secureTextEntry={!showPassword}
-              />
-              <TouchableOpacity
-                style={styles.eyeBtn}
-                onPress={() => setShowPassword(!showPassword)}
-                activeOpacity={0.7}
-              >
-                <Text style={styles.eyeText}>{showPassword ? '🙈 Hide' : '👁 Show'}</Text>
-              </TouchableOpacity>
-            </View>
-
-            {error ? <Text style={styles.errorText}>{error}</Text> : null}
-
-            <TouchableOpacity
-              style={[
-                styles.loginBtn,
-                loading && styles.btnDisabled,
-                loginSuccess && styles.loginBtnSuccess,
-              ]}
-              onPress={handleLogin}
-              disabled={loading || loginSuccess}
-              activeOpacity={0.85}
-            >
-              {loginSuccess ? (
-                <Text style={styles.loginBtnText}>✓ Access Granted</Text>
-              ) : loading ? (
-                <View style={styles.loadingRow}>
-                  <ActivityIndicator color={theme.colors.textDark} size="small" />
-                  <Text style={styles.loginBtnText}>Signing you in…</Text>
-                </View>
-              ) : (
-                <Text style={styles.loginBtnText}>Sign In to My Morph ➔</Text>
-              )}
+          <View style={styles.passwordLabelRow}>
+            <Text style={styles.label}>Password</Text>
+            <TouchableOpacity onPress={handleForgotStudentPass}>
+              <Text style={styles.forgotLinkText}>Forgot Password?</Text>
             </TouchableOpacity>
-
-            {/* Quick Demo Test Buttons */}
-            <View style={styles.demoBox}>
-              <Text style={styles.demoTitle}>⚡ 1-Click Demo Student Accounts:</Text>
-              <View style={styles.demoBtnRow}>
-                <TouchableOpacity
-                  style={styles.demoPill}
-                  onPress={() => {
-                    setLoginId('MA-2026-001');
-                    setPassword('Student@12345');
-                    setError('');
-                  }}
-                  activeOpacity={0.7}
-                >
-                  <Text style={styles.demoPillText}>🎓 Aarav (MA-2026-001)</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.demoPill}
-                  onPress={() => {
-                    setLoginId('MA-2026-002');
-                    setPassword('Student@12345');
-                    setError('');
-                  }}
-                  activeOpacity={0.7}
-                >
-                  <Text style={styles.demoPillText}>🎓 Kavita (MA-2026-002)</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
           </View>
+
+          {/* Password Input with Show/Hide Toggle */}
+          <View style={styles.passwordInputContainer}>
+            <TextInput
+              style={styles.passwordInput}
+              value={password}
+              onChangeText={setPassword}
+              placeholder="Enter password issued by academy"
+              placeholderTextColor={theme.colors.textMuted}
+              secureTextEntry={!showPassword}
+            />
+            <TouchableOpacity
+              style={styles.eyeBtn}
+              onPress={() => setShowPassword(!showPassword)}
+            >
+              <Text style={styles.eyeText}>{showPassword ? '🙈 Hide' : '👁 Show'}</Text>
+            </TouchableOpacity>
+          </View>
+
+          {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
           <TouchableOpacity
-            style={styles.whatsappHelpBtn}
-            onPress={handleForgotStudentPass}
-            activeOpacity={0.7}
+            style={[styles.loginBtn, loading && styles.btnDisabled]}
+            onPress={handleLogin}
+            disabled={loading}
           >
-            <Text style={styles.whatsappHelpText}>
-              💬 Need login help? Contact Reception on WhatsApp
-            </Text>
+            {loading ? (
+              <ActivityIndicator color={theme.colors.textDark} />
+            ) : (
+              <Text style={styles.loginBtnText}>Sign In to My Morph ➔</Text>
+            )}
           </TouchableOpacity>
 
-          <Text style={styles.footerHint}>
-            Student credentials are automatically generated during admission.
+          {/* Quick Demo Test Buttons */}
+          <View style={styles.demoBox}>
+            <Text style={styles.demoTitle}>⚡ 1-Click Demo Accounts:</Text>
+            <View style={styles.demoBtnRow}>
+              <TouchableOpacity
+                style={styles.demoPill}
+                onPress={() => {
+                  setLoginId('MA-2026-001');
+                  setPassword('Student@12345');
+                  setError('');
+                }}
+              >
+                <Text style={styles.demoPillText}>🎓 Aarav (MA-2026-001)</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.demoPill}
+                onPress={() => {
+                  setLoginId('MA-2026-002');
+                  setPassword('Student@12345');
+                  setError('');
+                }}
+              >
+                <Text style={styles.demoPillText}>🎓 Kavita (MA-2026-002)</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+
+        <TouchableOpacity style={styles.whatsappHelpBtn} onPress={handleForgotStudentPass}>
+          <Text style={styles.whatsappHelpText}>
+            💬 Need login help? Contact Reception on WhatsApp
           </Text>
-        </Animated.View>
+        </TouchableOpacity>
+
+        <Text style={styles.footerHint}>
+          Student credentials are automatically generated during admission.
+        </Text>
       </View>
-    </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  scrollContainer: {
-    flexGrow: 1,
-    backgroundColor: '#090D16',
+  container: {
+    flex: 1,
+    backgroundColor: theme.colors.background,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 16,
-    minHeight: Platform.OS === 'web' ? '100vh' : '100%',
-  },
-  mainWrapper: {
-    width: '100%',
-    maxWidth: 440,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  mainWrapperDesktop: {
-    maxWidth: 960,
-    flexDirection: 'row',
-    alignItems: 'stretch',
-    backgroundColor: '#0E1422',
-    borderRadius: theme.radius.xl,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.08)',
-    overflow: 'hidden',
-    ...theme.shadows.md,
-  },
-  visualSide: {
-    flex: 1.1,
-    backgroundColor: '#121A2D',
-    padding: 36,
-    justifyContent: 'space-between',
-    borderRightWidth: 1,
-    borderRightColor: 'rgba(255, 255, 255, 0.08)',
-  },
-  visualHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  visualBadge: {
-    width: 42,
-    height: 42,
-    borderRadius: 10,
-    backgroundColor: '#38BDF8',
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#38BDF8',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.35,
-    shadowRadius: 10,
-    elevation: 6,
-  },
-  visualBadgeText: {
-    color: '#090D16',
-    fontSize: 22,
-    fontWeight: '900',
-  },
-  visualTitle: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '900',
-    letterSpacing: 1,
-  },
-  visualSub: {
-    color: '#38BDF8',
-    fontSize: 9,
-    fontWeight: '800',
-    letterSpacing: 1.2,
-  },
-  visualCenter: {
-    marginVertical: 28,
-  },
-  visualHeroHeadline: {
-    color: '#FFFFFF',
-    fontSize: 26,
-    fontWeight: '900',
-    lineHeight: 32,
-    marginBottom: 10,
-  },
-  visualHeroDesc: {
-    color: '#94A3B8',
-    fontSize: 13,
-    lineHeight: 20,
-    marginBottom: 20,
-  },
-  visualTagsGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-  },
-  visualTagPill: {
-    backgroundColor: 'rgba(22, 32, 55, 0.90)',
-    paddingHorizontal: 12,
-    paddingVertical: 7,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.10)',
-  },
-  visualTagText: {
-    color: '#CBD5E1',
-    fontSize: 11,
-    fontWeight: '700',
-  },
-  visualFooter: {
-    borderTopWidth: 1,
-    borderTopColor: 'rgba(255, 255, 255, 0.08)',
-    paddingTop: 16,
-    gap: 4,
-  },
-  telemetryRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  telemetryDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: '#38BDF8',
-  },
-  telemetryText: {
-    color: '#38BDF8',
-    fontSize: 11,
-    fontWeight: '700',
-  },
-  telemetryCampus: {
-    color: '#64748B',
-    fontSize: 11,
+    padding: 20,
   },
   card: {
-    flex: 1,
     width: '100%',
     maxWidth: 440,
-    backgroundColor: '#141C2E',
+    backgroundColor: theme.colors.surfaceCard,
     borderRadius: theme.radius.lg,
-    padding: 30,
+    padding: 28,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.08)',
+    borderColor: theme.colors.border,
     alignItems: 'center',
     ...theme.shadows.md,
   },
@@ -462,15 +189,10 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: theme.radius.md,
-    backgroundColor: '#38BDF8',
+    backgroundColor: theme.colors.accentSlate,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 14,
-    shadowColor: '#38BDF8',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.35,
-    shadowRadius: 10,
-    elevation: 6,
   },
   logoText: {
     color: theme.colors.textDark,
@@ -478,7 +200,7 @@ const styles = StyleSheet.create({
     fontWeight: '900',
   },
   badge: {
-    color: '#38BDF8',
+    color: theme.colors.accentSlate,
     fontSize: 10,
     fontWeight: '800',
     letterSpacing: 1.2,
@@ -487,20 +209,19 @@ const styles = StyleSheet.create({
   title: {
     color: theme.colors.textPrimary,
     fontSize: 22,
-    fontWeight: '900',
+    fontWeight: '800',
     marginBottom: 6,
     textAlign: 'center',
   },
   subtitle: {
     color: theme.colors.textSecondary,
-    fontSize: 12,
+    fontSize: 13,
     textAlign: 'center',
-    marginBottom: 20,
-    lineHeight: 17,
+    marginBottom: 24,
   },
   form: {
     width: '100%',
-    gap: 10,
+    gap: 12,
   },
   label: {
     color: theme.colors.textSecondary,
@@ -513,7 +234,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   forgotLinkText: {
-    color: '#38BDF8',
+    color: theme.colors.accentSlate,
     fontSize: 11,
     fontWeight: '700',
   },
@@ -526,10 +247,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 12,
     fontSize: 14,
-  },
-  inputFocused: {
-    borderColor: '#38BDF8',
-    backgroundColor: '#182238',
   },
   passwordInputContainer: {
     flexDirection: 'row',
@@ -552,24 +269,16 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
   },
   eyeText: {
-    color: '#38BDF8',
+    color: theme.colors.accentSlate,
     fontSize: 12,
     fontWeight: '700',
   },
   loginBtn: {
-    backgroundColor: '#38BDF8',
+    backgroundColor: theme.colors.accentSlate,
     borderRadius: theme.radius.md,
     paddingVertical: 14,
     alignItems: 'center',
-    marginTop: 6,
-  },
-  loginBtnSuccess: {
-    backgroundColor: '#10B981',
-  },
-  loadingRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+    marginTop: 8,
   },
   loginBtnText: {
     color: theme.colors.textDark,
@@ -577,7 +286,28 @@ const styles = StyleSheet.create({
     fontWeight: '800',
   },
   btnDisabled: {
-    opacity: 0.7,
+    opacity: 0.6,
+  },
+  errorText: {
+    color: theme.colors.danger,
+    fontSize: 13,
+    textAlign: 'center',
+  },
+  whatsappHelpBtn: {
+    marginTop: 14,
+    paddingVertical: 6,
+  },
+  whatsappHelpText: {
+    color: theme.colors.textSecondary,
+    fontSize: 11,
+    textAlign: 'center',
+    fontWeight: '600',
+  },
+  footerHint: {
+    color: theme.colors.textMuted,
+    fontSize: 11,
+    textAlign: 'center',
+    marginTop: 14,
   },
   demoBox: {
     backgroundColor: theme.colors.surface,
@@ -603,7 +333,7 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.surfaceCard,
     borderWidth: 1,
     borderColor: theme.colors.borderLight,
-    paddingVertical: 7,
+    paddingVertical: 6,
     borderRadius: theme.radius.xs,
     alignItems: 'center',
   },
@@ -611,29 +341,5 @@ const styles = StyleSheet.create({
     color: theme.colors.textSecondary,
     fontSize: 10,
     fontWeight: '700',
-  },
-  whatsappHelpBtn: {
-    marginTop: 14,
-    paddingVertical: 6,
-  },
-  whatsappHelpText: {
-    color: theme.colors.textSecondary,
-    fontSize: 11,
-    textAlign: 'center',
-    fontWeight: '600',
-  },
-  footerHint: {
-    color: theme.colors.textMuted,
-    fontSize: 10,
-    textAlign: 'center',
-    marginTop: 14,
-  },
-  errorText: {
-    color: theme.colors.danger,
-    fontSize: 12,
-    textAlign: 'center',
-    backgroundColor: theme.colors.dangerLight,
-    padding: 8,
-    borderRadius: theme.radius.xs,
   },
 });

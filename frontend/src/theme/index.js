@@ -1,71 +1,59 @@
 export const theme = {
   colors: {
-    // Modern Mixed Studio Palette (Rich Navy & Deep Dark Surfaces)
-    background: '#090D16',
-    backgroundAlt: '#0E1422',
-    surface: '#121A2D',
-    surfaceCard: '#162037',
-    surfaceCardElevated: '#1D2A48',
-    surfaceGlass: 'rgba(18, 26, 45, 0.90)',
+    // Elegant Matte Dark Palette (Apple / Linear / Studio aesthetic)
+    background: '#090C10',
+    surface: '#0E131B',
+    surfaceCard: '#131924',
+    surfaceCardElevated: '#1A2232',
+    surfaceGlass: 'rgba(14, 19, 27, 0.90)',
 
-    // Morph Golden Amber Primary Accent (#F5A623)
-    primary: '#F5A623',
-    primaryHover: '#E09315',
-    primaryLight: 'rgba(245, 166, 35, 0.15)',
-    primaryBorder: 'rgba(245, 166, 35, 0.40)',
+    // Refined Warm Amber / Gold Primary Accent (Subtle & High-End)
+    primary: '#E5A93C',
+    primaryHover: '#D4962B',
+    primaryLight: 'rgba(229, 169, 60, 0.10)',
+    primaryBorder: 'rgba(229, 169, 60, 0.30)',
 
-    // Secondary Studio Accents
+    // Secondary Subtle Accents (Minimalist & Non-Distracting)
     accentSlate: '#38BDF8',
-    accentSlateLight: 'rgba(56, 189, 248, 0.12)',
-    accentCyan: '#06B6D4',
-    accentCyanLight: 'rgba(6, 182, 212, 0.12)',
+    accentSlateLight: 'rgba(56, 189, 248, 0.08)',
+    accentCyan: '#38BDF8',
+    accentCyanLight: 'rgba(56, 189, 248, 0.08)',
     accentPurple: '#A78BFA',
-    accentPurpleLight: 'rgba(167, 139, 250, 0.12)',
-    accentIndigo: '#6366F1',
+    accentPurpleLight: 'rgba(167, 139, 250, 0.08)',
     accentMuted: '#94A3B8',
 
     // Text Hierarchy
-    textPrimary: '#FFFFFF',
-    textSecondary: '#CBD5E1',
-    textMuted: '#8492A6',
-    textDark: '#080B10',
+    textPrimary: '#F8FAFC',
+    textSecondary: '#94A3B8',
+    textMuted: '#64748B',
+    textDark: '#090C10',
 
-    // Status Colors
+    // Status Colors (Subtle)
     success: '#10B981',
-    successLight: 'rgba(16, 185, 129, 0.15)',
+    successLight: 'rgba(16, 185, 129, 0.12)',
     warning: '#F59E0B',
-    warningLight: 'rgba(245, 158, 11, 0.15)',
+    warningLight: 'rgba(245, 158, 11, 0.12)',
     danger: '#EF4444',
-    dangerLight: 'rgba(239, 68, 68, 0.15)',
+    dangerLight: 'rgba(239, 68, 68, 0.12)',
     info: '#3B82F6',
-    infoLight: 'rgba(59, 130, 246, 0.15)',
+    infoLight: 'rgba(59, 130, 246, 0.12)',
 
     // Lead Source Badges
     sourceInstagram: '#E1306C',
-    sourceInstagramBg: 'rgba(225, 48, 108, 0.15)',
+    sourceInstagramBg: 'rgba(225, 48, 108, 0.12)',
     sourceYouTube: '#FF0000',
-    sourceYouTubeBg: 'rgba(255, 0, 0, 0.15)',
+    sourceYouTubeBg: 'rgba(255, 0, 0, 0.12)',
     sourceGoogle: '#4285F4',
-    sourceGoogleBg: 'rgba(66, 133, 244, 0.15)',
+    sourceGoogleBg: 'rgba(66, 133, 244, 0.12)',
     sourceWhatsApp: '#25D366',
-    sourceWhatsAppBg: 'rgba(37, 211, 102, 0.15)',
+    sourceWhatsAppBg: 'rgba(37, 211, 102, 0.12)',
     sourceDirect: '#94A3B8',
-    sourceDirectBg: 'rgba(148, 163, 184, 0.12)',
+    sourceDirectBg: 'rgba(148, 163, 184, 0.10)',
 
     // Borders
-    border: 'rgba(255, 255, 255, 0.10)',
-    borderLight: 'rgba(255, 255, 255, 0.18)',
-    borderActive: '#F5A623',
-  },
-
-  spacing: {
-    xs: 4,
-    sm: 8,
-    md: 16,
-    lg: 24,
-    xl: 32,
-    xxl: 48,
-    containerMaxWidth: 1240,
+    border: 'rgba(255, 255, 255, 0.07)',
+    borderLight: 'rgba(255, 255, 255, 0.12)',
+    borderActive: '#E5A93C',
   },
 
   radius: {
@@ -93,9 +81,9 @@ export const theme = {
       elevation: 6,
     },
     glowPrimary: {
-      shadowColor: '#F5A623',
+      shadowColor: '#E5A93C',
       shadowOffset: { width: 0, height: 4 },
-      shadowOpacity: 0.35,
+      shadowOpacity: 0.25,
       shadowRadius: 14,
       elevation: 8,
     },
