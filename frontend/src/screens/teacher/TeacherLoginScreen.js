@@ -4,6 +4,7 @@ import {
   Animated,
   Easing,
   Linking,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -313,6 +314,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 16,
+    minHeight: Platform.OS === 'web' ? '100vh' : '100%',
   },
   mainWrapper: {
     width: '100%',

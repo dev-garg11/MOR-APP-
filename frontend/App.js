@@ -99,7 +99,7 @@ export default function App() {
   // --- 1. STUDENT PORTAL ---
   if (currentPortal === 'student') {
     return (
-      <SafeAreaView style={styles.safeArea}>
+      <View style={styles.safeArea}>
         <StatusBar style="light" />
         {isStudentLoggedIn ? (
           <StudentDashboardScreen
@@ -114,7 +114,7 @@ export default function App() {
             onBackToHome={() => setCurrentPortal('public')}
           />
         )}
-      </SafeAreaView>
+      </View>
     );
   }
 
@@ -122,13 +122,13 @@ export default function App() {
   if (currentPortal === 'teacher') {
     if (!isAdminLoggedIn || (userRole !== 'teacher' && userRole !== 'trainer')) {
       return (
-        <SafeAreaView style={styles.safeArea}>
+        <View style={styles.safeArea}>
           <StatusBar style="light" />
           <TeacherLoginScreen
             onLoginSuccess={handleStaffLoginSuccess}
             onBackToHome={() => setCurrentPortal('public')}
           />
-        </SafeAreaView>
+        </View>
       );
     }
 
@@ -144,18 +144,18 @@ export default function App() {
   if (currentPortal === 'admin') {
     if (!isAdminLoggedIn) {
       return (
-        <SafeAreaView style={styles.safeArea}>
+        <View style={styles.safeArea}>
           <StatusBar style="light" />
           <AdminLoginScreen
             onLoginSuccess={handleStaffLoginSuccess}
             onBackToHome={() => setCurrentPortal('public')}
           />
-        </SafeAreaView>
+        </View>
       );
     }
 
     return (
-      <SafeAreaView style={styles.safeArea}>
+      <View style={styles.safeArea}>
         <StatusBar style="light" />
         {/* Admin Navigation Bar */}
         <View style={styles.adminNavBar}>
@@ -248,7 +248,7 @@ export default function App() {
           {adminTab === 'fees' && <FeeManagerScreen />}
           {adminTab === 'attendance' && <TrainerAttendanceScreen />}
         </View>
-      </SafeAreaView>
+      </View>
     );
   }
 
@@ -270,6 +270,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: theme.colors.background,
     width: '100%',
+    minHeight: Platform.OS === 'web' ? '100vh' : '100%',
   },
   centerBox: {
     flex: 1,
