@@ -26,7 +26,11 @@ export {
   deleteFeePayment,
   getStudentFeeSummary,
   listPendingFees,
+  generateEmiSchedule,
+  getStudentEmiSchedule,
+  getMyEmiSchedule,
 } from './feeEndpoints';
+
 
 export {
   createLead,

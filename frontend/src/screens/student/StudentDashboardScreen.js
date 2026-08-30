@@ -376,9 +376,112 @@ export function StudentDashboardScreen({ onLogout }) {
         </View>
       </View>
 
+      {/* EMI Schedule & Ledger Breakdown Card */}
+      <View style={styles.sectionCard}>
+        <View style={styles.sectionHeaderRow}>
+          <Text style={styles.sectionTitle}>📅 My Fee Ledger & EMI Schedule</Text>
+          {fees?.emi_plan_months ? (
+            <View style={styles.planBadge}>
+              <Text style={styles.planBadgeText}>{fees.emi_plan_months}-Month EMI Plan</Text>
+            </View>
+          ) : null}
+        </View>
+
+        {/* Ledger Breakdown */}
+        <View style={styles.feeBreakdownGrid}>
+          <View style={styles.feeBreakdownCol}>
+            <Text style={styles.feeBreakdownLabel}>TOTAL FEES</Text>
+            <Text style={styles.feeBreakdownVal}>₹{Number(fees?.fees_total || 0).toLocaleString()}</Text>
+          </View>
+          <View style={styles.feeBreakdownCol}>
+            <Text style={styles.feeBreakdownLabel}>SCHOLARSHIP / DISC</Text>
+            <Text style={[styles.feeBreakdownVal, { color: '#38BDF8' }]}>
+              ₹{Number(fees?.discount_amount || 0).toLocaleString()}
+            </Text>
+          </View>
+          <View style={styles.feeBreakdownCol}>
+            <Text style={styles.feeBreakdownLabel}>TOTAL PAID</Text>
+            <Text style={[styles.feeBreakdownVal, { color: '#22C55E' }]}>
+              ₹{Number(fees?.fees_paid || 0).toLocaleString()}
+            </Text>
+          </View>
+          <View style={styles.feeBreakdownCol}>
+            <Text style={styles.feeBreakdownLabel}>OUTSTANDING</Text>
+            <Text style={[styles.feeBreakdownVal, { color: '#EF4444' }]}>
+              ₹{Number(fees?.pending_amount || 0).toLocaleString()}
+            </Text>
+          </View>
+        </View>
+
+        {fees?.next_emi ? (
+          <View style={styles.nextEmiAlert}>
+            <Text style={styles.nextEmiAlertTitle}>
+              🔔 Next Installment: ₹{Number(fees.next_emi.amount).toLocaleString()}
+            </Text>
+            <Text style={styles.nextEmiAlertSub}>
+              Due Date: {fees.next_emi.due_date} (Installment #{fees.next_emi.emi_number})
+            </Text>
+          </View>
+        ) : null}
+
+        {/* Installments Table */}
+        {fees?.emis?.length > 0 ? (
+          <View style={styles.emiStudentTable}>
+            {fees.emis.map((inst) => {
+              const isPaid = inst.status === 'paid';
+              const isOver = inst.status === 'overdue';
+              return (
+                <View key={inst.id || inst.emi_number} style={styles.emiStudentRow}>
+                  <View style={styles.emiStudentLeft}>
+                    <Text style={styles.emiStudentNum}>Installment #{inst.emi_number}</Text>
+                    <Text style={styles.emiStudentDue}>📅 Due Date: {inst.due_date}</Text>
+                    {inst.payment_date ? (
+                      <Text style={styles.emiStudentPaidDate}>
+                        ✓ Paid on {inst.payment_date} ({inst.payment_mode || 'Online'})
+                      </Text>
+                    ) : null}
+                  </View>
+
+                  <View style={styles.emiStudentRight}>
+                    <Text style={styles.emiStudentAmount}>₹{Number(inst.amount).toLocaleString()}</Text>
+                    <View
+                      style={[
+                        styles.statusBadgeSmall,
+                        {
+                          backgroundColor: isPaid
+                            ? 'rgba(34, 197, 94, 0.15)'
+                            : isOver
+                            ? 'rgba(239, 68, 68, 0.15)'
+                            : 'rgba(245, 166, 35, 0.15)',
+                          borderColor: isPaid ? '#22C55E' : isOver ? '#EF4444' : '#F5A623',
+                        },
+                      ]}
+                    >
+                      <Text
+                        style={[
+                          styles.statusBadgeTextSmall,
+                          { color: isPaid ? '#22C55E' : isOver ? '#EF4444' : '#F5A623' },
+                        ]}
+                      >
+                        {isPaid ? '✓ PAID' : isOver ? '⚠️ OVERDUE' : '⏳ PENDING'}
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              );
+            })}
+          </View>
+        ) : (
+          <Text style={styles.noDataText}>
+            Standard semester tuition plan active. No monthly EMI schedule currently configured.
+          </Text>
+        )}
+      </View>
+
       {/* Payment History & Receipts */}
       <View style={styles.sectionCard}>
         <Text style={styles.sectionTitle}>💳 Payment History & Receipts</Text>
+
         {fees?.payments?.length > 0 ? (
           fees.payments.map((p) => (
             <View key={p.id} style={styles.paymentRow}>
@@ -1288,5 +1391,117 @@ const styles = StyleSheet.create({
     padding: 8,
     borderRadius: theme.radius.xs,
   },
+  planBadge: {
+    backgroundColor: 'rgba(245, 166, 35, 0.15)',
+    borderWidth: 1,
+    borderColor: '#F5A623',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 6,
+  },
+  planBadgeText: {
+    color: '#F5A623',
+    fontSize: 11,
+    fontWeight: '800',
+  },
+  feeBreakdownGrid: {
+    flexDirection: 'row',
+    backgroundColor: '#0F172A',
+    borderRadius: 12,
+    padding: 12,
+    borderWidth: 1,
+    borderColor: '#1E293B',
+    marginBottom: 12,
+    justifyContent: 'space-between',
+  },
+  feeBreakdownCol: {
+    alignItems: 'center',
+  },
+  feeBreakdownLabel: {
+    color: '#64748B',
+    fontSize: 9,
+    fontWeight: '800',
+    letterSpacing: 0.5,
+    marginBottom: 4,
+  },
+  feeBreakdownVal: {
+    color: '#FFFFFF',
+    fontSize: 13,
+    fontWeight: '900',
+  },
+  nextEmiAlert: {
+    backgroundColor: 'rgba(245, 166, 35, 0.1)',
+    borderWidth: 1,
+    borderColor: 'rgba(245, 166, 35, 0.4)',
+    borderRadius: 10,
+    padding: 12,
+    marginBottom: 12,
+  },
+  nextEmiAlertTitle: {
+    color: '#F5A623',
+    fontSize: 13,
+    fontWeight: '800',
+  },
+  nextEmiAlertSub: {
+    color: '#94A3B8',
+    fontSize: 11,
+    marginTop: 2,
+  },
+  emiStudentTable: {
+    backgroundColor: '#0F172A',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#1E293B',
+    overflow: 'hidden',
+  },
+  emiStudentRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#1E293B',
+  },
+  emiStudentLeft: {
+    flex: 1,
+  },
+  emiStudentNum: {
+    color: '#FFFFFF',
+    fontSize: 12,
+    fontWeight: '800',
+  },
+  emiStudentDue: {
+    color: '#F5A623',
+    fontSize: 10,
+    marginTop: 2,
+    fontWeight: '600',
+  },
+  emiStudentPaidDate: {
+    color: '#22C55E',
+    fontSize: 10,
+    marginTop: 2,
+    fontWeight: '600',
+  },
+  emiStudentRight: {
+    alignItems: 'flex-end',
+    gap: 4,
+  },
+  emiStudentAmount: {
+    color: '#FFFFFF',
+    fontSize: 13,
+    fontWeight: '900',
+  },
+  statusBadgeSmall: {
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 4,
+    borderWidth: 1,
+  },
+  statusBadgeTextSmall: {
+    fontSize: 9,
+    fontWeight: '800',
+  },
 });
+
 

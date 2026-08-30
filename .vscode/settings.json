@@ -1,0 +1,14 @@
+{
+  "python.analysis.extraPaths": [
+    "../backend_updated (2)",
+    "../backend",
+    "c:/Users/lenovo/OneDrive/Desktop/more_update/backend_updated (2)",
+    "c:/Users/lenovo/OneDrive/Desktop/more_update/backend"
+  ],
+  "python.autoComplete.extraPaths": [
+    "../backend_updated (2)",
+    "../backend",
+    "c:/Users/lenovo/OneDrive/Desktop/more_update/backend_updated (2)",
+    "c:/Users/lenovo/OneDrive/Desktop/more_update/backend"
+  ]
+}

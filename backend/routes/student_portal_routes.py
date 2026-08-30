@@ -56,7 +56,44 @@ def get_my_fees(
         .order_by(FeePayment.payment_date.desc(), FeePayment.id.desc())
         .all()
     )
-    return build_summary(student, payments)
+    return build_summary(student, payments, db=db)
+
+
+@portal_router.get("/me/emi-schedule")
+def get_my_emi_schedule(
+    db: Session = Depends(get_db),
+    student_data: dict = Depends(get_current_student),
+):
+    student = get_logged_in_student(student_data, db)
+    from models.fee_payment_models import StudentEmi
+    from routes.fee_routes import money, sync_emi_statuses, ZERO
+    from schemas.fee_schemas import StudentEmiResponse, EmiScheduleResponse
+
+    fees_total = money(student.fees_total)
+    discount_amount = money(student.discount_amount)
+    fees_paid = money(student.fees_paid)
+    payable = max(fees_total - discount_amount, ZERO)
+    outstanding = max(payable - fees_paid, ZERO)
+
+    emis = (
+        db.query(StudentEmi)
+        .filter(StudentEmi.student_id == student.id)
+        .order_by(StudentEmi.emi_number.asc())
+        .all()
+    )
+    emis = sync_emi_statuses(emis, db)
+
+    inst_amt = emis[0].amount if emis else ZERO
+    return EmiScheduleResponse(
+        student_id=student.id,
+        student_name=student.name,
+        months=len(emis),
+        outstanding_amount=outstanding,
+        installment_amount=inst_amt,
+        installments=[StudentEmiResponse.model_validate(e) for e in emis],
+        already_scheduled=True,
+    )
+
 
 
 @portal_router.get("/me/attendance", response_model=list[AttendanceResponse])

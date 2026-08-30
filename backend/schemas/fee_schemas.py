@@ -40,6 +40,37 @@ class FeePaymentResponse(BaseModel):
         from_attributes = True
 
 
+class StudentEmiResponse(BaseModel):
+    id: int
+    student_id: int
+    emi_number: int
+    amount: Decimal
+    due_date: date
+    status: str  # pending, paid, overdue
+    payment_date: Optional[date] = None
+    payment_mode: Optional[str] = None
+    transaction_reference: Optional[str] = None
+    notes: Optional[str] = None
+
+    class Config:
+        from_attributes = True
+
+
+class EmiScheduleCreateRequest(BaseModel):
+    months: int = Field(description="Must be 3, 6, or 12 months")
+    start_date: Optional[date] = None
+
+
+class EmiScheduleResponse(BaseModel):
+    student_id: int
+    student_name: str
+    months: int
+    outstanding_amount: Decimal
+    installment_amount: Decimal
+    installments: list[StudentEmiResponse]
+    already_scheduled: bool = False
+
+
 class FeeSummary(BaseModel):
     student_id: int
     student_name: str
@@ -51,11 +82,15 @@ class FeeSummary(BaseModel):
     fee_due_date: Optional[date] = None
     fee_status: str
     payments: list[FeePaymentResponse] = []
+    emis: list[StudentEmiResponse] = []
+    next_emi: Optional[StudentEmiResponse] = None
+    emi_plan_months: Optional[int] = None
 
 
 class PaymentOrderCreateRequest(BaseModel):
     student_id: Optional[int] = None
     amount_rupees: Optional[Decimal] = Field(default=None, gt=0)
+
 
 
 class PaymentOrderResponse(BaseModel):

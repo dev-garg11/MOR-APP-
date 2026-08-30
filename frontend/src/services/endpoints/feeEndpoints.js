@@ -33,3 +33,23 @@ export const getStudentFeeSummary = (studentId) =>
  * All students with pending/overdue fees.
  */
 export const listPendingFees = () => get('/fees/pending', { auth: 'admin' });
+
+/**
+ * Generate 3, 6, or 12 month EMI schedule for a student based on actual outstanding balance.
+ * payload: { months: 3|6|12, start_date?: 'YYYY-MM-DD' }
+ */
+export const generateEmiSchedule = (studentId, payload) =>
+  post(`/fees/students/${studentId}/emi-schedule`, payload, { auth: 'admin' });
+
+/**
+ * Get EMI schedule for staff/admin.
+ */
+export const getStudentEmiSchedule = (studentId) =>
+  get(`/fees/students/${studentId}/emi-schedule`, { auth: 'admin' });
+
+/**
+ * Student portal: Read-only access to logged-in student's own EMI schedule.
+ */
+export const getMyEmiSchedule = () =>
+  get('/student-portal/me/emi-schedule', { auth: 'student' });
+
